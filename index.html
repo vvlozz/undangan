@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <!-- Paksa halaman selalu mulai dari paling atas (hero) setiap kali dibuka
+     atau di-reload — beberapa browser (Chrome/Safari) otomatis "mengingat"
+     & mengembalikan posisi scroll terakhir, yang bisa bikin undangan
+     kelihatan langsung nongol di tengah section lain, bukan dari awal.
+     Harus di sini (paling atas <head>, dijalankan sesegera mungkin)
+     supaya sempat menimpa perilaku bawaan browser tersebut. -->
+    <script>
+      if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+      window.scrollTo(0, 0);
+      // Kasus halaman dipulihkan dari bfcache (mis. tekan tombol Back browser)
+      // tidak menjalankan ulang script ini, jadi ditangani terpisah di sini.
+      window.addEventListener("pageshow", (e) => {
+        if (e.persisted) window.scrollTo(0, 0);
+      });
+    </script>
+    <title>Nissa &amp; Hanif — Mohon Doa Restu</title>
+    <meta
+      name="description"
+      content="Pernikahan Nissa & Hanif"
+      id="meta-description"
+    />
+
+    <!-- Preview link (WhatsApp/Instagram/dll TIDAK menjalankan JavaScript,
+     jadi title/description/gambar di bawah ini WAJIB diedit manual di
+     sini setiap kali nama pengantin di config.js diganti — tidak
+     otomatis ikut berubah seperti bagian lain di situs) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Nissa & Hanif — Mohon Doa Restu" />
+    <meta property="og:description" content="Pernikahan Nissa & Hanif" />
+    <meta property="og:image" content="assets/images/favicon.png" />
+
+    <!-- Favicon (ikon kecil di tab browser) & ikon link preview — SENGAJA
+     file terpisah dari assets/images/logo.png (yang dipakai di layar
+     loading), supaya bisa diganti masing-masing secara independen.
+     Ganti assets/images/favicon.png untuk ubah ikon tab & preview link;
+     ganti assets/images/logo.png untuk ubah logo di layar loading. -->
+    <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+    <link rel="apple-touch-icon" href="assets/images/favicon.png" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Poppins:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Modular CSS -->
+    <link rel="stylesheet" href="assets/css/variables.css" />
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/components.css" />
+    <link rel="stylesheet" href="assets/css/character.css" />
+    <link rel="stylesheet" href="assets/css/sections.css" />
+    <link rel="stylesheet" href="assets/css/responsive.css" />
+    <link rel="stylesheet" href="assets/css/design.css" />
+
+    <link rel="icon" href="assets/images/logo.png" />
+  </head>
+  <body>
+    <!-- ======================================================
+     APP FRAME — membungkus seluruh halaman agar tampilan
+     selalu menyerupai layar HP, meskipun dibuka di PC/desktop
+====================================================== -->
+    <div id="app-frame">
+      <!-- ======================================================
+     LOADING SCREEN
+====================================================== -->
+      <div id="loading-screen">
+        <img
+          src="assets/images/stempel.png"
+          alt="Stempel N&amp;H"
+          class="loading-logo"
+        />
+        <p class="loading-title" id="loading-title">Nissa &amp; Hanif</p>
+        <p class="loading-hashtag" id="loading-hashtag">#HANIFoundNissa</p>
+        <p class="loading-caption" id="loading-caption">
+          Menyiapkan undangan...
+        </p>
+        <div class="loading-bar-track">
+          <div class="loading-bar-fill" id="loading-bar-fill"></div>
+        </div>
+      </div>
+
+      <!-- ======================================================
+     GAME STAGE — lapisan karakter & efek di atas seluruh halaman
+====================================================== -->
+      <div id="game-stage" aria-hidden="true">
+        <div id="groom-character" class="character" data-facing="down">
+          <div class="character-sprite groom-sprite"></div>
+          <div class="character-shadow"></div>
+        </div>
+        <div id="bride-character" class="character" data-facing="down">
+          <div class="character-sprite bride-sprite"></div>
+          <div class="character-shadow"></div>
+        </div>
+        <div id="popup-dialog" class="popup-dialog">
+          <div class="popup-dialog__inner">
+            <p id="popup-dialog-text"></p>
+          </div>
+          <div class="popup-dialog__tail"></div>
+        </div>
+        <div id="effects-layer"></div>
+      </div>
+
+      <!-- ======================================================
+     MAIN CONTENT
+====================================================== -->
+      <main id="main-content" class="hidden-until-ready">
+        <!-- HERO -->
+        <section id="hero" class="section hero-section" data-popup="hero">
+          <div class="hero-bg hero-bg--fade-bottom"></div>
+          <div class="hero-content">
+            <div class="hero-card">
+              <img
+                src="assets/images/stempel.png"
+                alt="Stempel N&amp;H"
+                class="hero-stamp"
+              />
+              <p class="eyebrow">The Wedding Of</p>
+              <h1 class="hero-names">
+                <span id="bride-name-display">Nissa</span>
+                <span class="hero-amp">&amp;</span>
+                <span id="groom-name-display">Hanif</span>
+              </h1>
+              <p class="hero-date" id="hero-date-display">
+                Sabtu, 22 Juni 2026
+              </p>
+
+              <div class="invited-guest" id="invited-guest">
+                <p class="invited-guest-label" id="invited-guest-label">
+                  Kepada Yth.
+                </p>
+                <p class="invited-guest-name" id="invited-guest-name">
+                  Bapak/Ibu/Saudara/i
+                </p>
+              </div>
+
+              <div
+                class="hero-countdown"
+                id="hero-countdown"
+                aria-label="Hitung mundur acara"
+              >
+                <div class="countdown-item">
+                  <span class="countdown-value" id="cd-days">00</span>
+                  <span class="countdown-label">Hari</span>
+                </div>
+                <div class="countdown-item">
+                  <span class="countdown-value" id="cd-hours">00</span>
+                  <span class="countdown-label">Jam</span>
+                </div>
+                <div class="countdown-item">
+                  <span class="countdown-value" id="cd-minutes">00</span>
+                  <span class="countdown-label">Menit</span>
+                </div>
+                <div class="countdown-item">
+                  <span class="countdown-value" id="cd-seconds">00</span>
+                  <span class="countdown-label">Detik</span>
+                </div>
+              </div>
+
+              <button id="open-invitation-btn" class="btn btn-primary ripple">
+                <img src="assets/icons/heart.png" alt="" class="btn-icon" />
+                Buka Undangan
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- KATA PEMBUKA / AYAT -->
+        <section
+          id="opening"
+          class="section opening-section"
+          data-popup="opening"
+        >
+          <div class="hero-bg hero-bg--fade-both"></div>
+          <div class="section-inner">
+            <div class="ayat-card">
+              <img
+                src="assets/images/stempel.png"
+                alt="Stempel N&amp;H"
+                class="ayat-stamp"
+              />
+              <img
+                src="assets/effects/ayat-flower-tr.png"
+                alt=""
+                class="ayat-flower ayat-flower--tr"
+              />
+              <img
+                src="assets/effects/ayat-flower-bl.png"
+                alt=""
+                class="ayat-flower ayat-flower--bl"
+              />
+
+              <p class="eyebrow" id="opening-label">Kata Pembuka</p>
+
+              <p class="opening-title" id="opening-title"></p>
+              <div class="ayat-divider"></div>
+
+              <p class="opening-arabic" id="opening-arabic"></p>
+
+              <div class="ayat-divider"></div>
+
+              <p class="opening-translation" id="opening-translation"></p>
+
+              <div class="ayat-divider"></div>
+
+              <p class="opening-source" id="opening-source"></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- PROFIL MEMPELAI -->
+        <section
+          id="profile"
+          class="section profile-section"
+          data-popup="profile"
+        >
+          <div class="hero-bg hero-bg--fade-both"></div>
+          <div class="section-inner">
+            <div class="profile-frame">
+              <img
+                src="assets/images/stempel.png"
+                alt="Stempel N&amp;H"
+                class="profile-frame-stamp"
+              />
+              <img
+                src="assets/images/frame-corner-tr.png"
+                alt=""
+                class="ayat-flower ayat-flower--tr"
+              />
+              <img
+                src="assets/images/frame-corner-bl.png"
+                alt=""
+                class="ayat-flower ayat-flower--bl"
+              />
+
+              <p class="eyebrow profile-eyebrow">Profil Mempelai</p>
+              <div class="profile-fleuron" aria-hidden="true"></div>
+
+              <h2 class="profile-role-title">Mempelai Wanita</h2>
+              <div class="ayat-divider"></div>
+              <div class="profile-portrait">
+                <span
+                  class="profile-portrait-orn profile-portrait-orn--left"
+                  aria-hidden="true"
+                ></span>
+                <div class="profile-avatar" id="bride-avatar">
+                  <img
+                    src="assets/icons/camera.png"
+                    alt=""
+                    class="placeholder-icon-small"
+                  />
+                </div>
+                <span
+                  class="profile-portrait-orn profile-portrait-orn--right"
+                  aria-hidden="true"
+                ></span>
+              </div>
+              <h3 id="profile-bride-name">Khoirunnisa</h3>
+              <p class="profile-order" id="profile-bride-order">
+                Putri kedua dari
+              </p>
+              <p class="profile-parents" id="profile-bride-parents">
+                Bapak Muhammad Ridwan &amp; Ibu Dewi Lestari
+              </p>
+
+              <div class="profile-medallion-divider" aria-hidden="true"></div>
+
+              <h2 class="profile-role-title">Mempelai Pria</h2>
+              <div class="ayat-divider"></div>
+              <div class="profile-portrait">
+                <span
+                  class="profile-portrait-orn profile-portrait-orn--left"
+                  aria-hidden="true"
+                ></span>
+                <div class="profile-avatar" id="groom-avatar">
+                  <img
+                    src="assets/icons/camera.png"
+                    alt=""
+                    class="placeholder-icon-small"
+                  />
+                </div>
+                <span
+                  class="profile-portrait-orn profile-portrait-orn--right"
+                  aria-hidden="true"
+                ></span>
+              </div>
+              <h3 id="profile-groom-name">Yusran Hanif</h3>
+              <p class="profile-order" id="profile-groom-order">
+                Putra pertama dari
+              </p>
+              <p class="profile-parents" id="profile-groom-parents">
+                Bapak Ahmad Yusuf &amp; Ibu Siti Aminah
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- DETAIL ACARA -->
+        <section id="detail" class="section detail-section" data-popup="detail">
+          <div class="hero-bg hero-bg--fade-both"></div>
+          <div class="section-inner">
+            <div class="detail-frame">
+              <img
+                src="assets/images/stempel.png"
+                alt="Stempel N&amp;H"
+                class="ayat-stamp"
+              />
+              <img
+                src="assets/effects/detail-flower-tr.png"
+                alt=""
+                class="ayat-flower ayat-flower--tr"
+              />
+              <img
+                src="assets/effects/detail-flower-bl.png"
+                alt=""
+                class="ayat-flower ayat-flower--bl"
+              />
+
+              <p class="eyebrow">Detail Acara</p>
+              <h2 class="profile-role-title">Kapan &amp; Di Mana</h2>
+              <div class="ayat-divider"></div>
+              <p class="section-desc">
+                Kehadiran serta doa restu Bapak/Ibu/Saudara/i merupakan suatu
+                kebahagiaan bagi kami.
+              </p>
+
+              <div class="detail-rows">
+                <div class="detail-row">
+                  <img
+                    src="assets/icons/calendar.png"
+                    alt="Tanggal"
+                    class="detail-icon"
+                  />
+                  <h3>Akad Nikah</h3>
+                  <p id="detail-date-1">Sabtu, 22 Juni 2026</p>
+                  <p id="detail-time-1">08.00 WIB - Selesai</p>
+                </div>
+
+                <div class="detail-row-divider" aria-hidden="true"></div>
+
+                <div class="detail-row">
+                  <img
+                    src="assets/icons/gift.png"
+                    alt="Resepsi"
+                    class="detail-icon"
+                  />
+                  <h3>Resepsi</h3>
+                  <p id="detail-date-2">Sabtu, 22 Juni 2026</p>
+                  <p id="detail-time-2">11.00 - 14.00 WIB</p>
+                </div>
+
+                <div class="detail-row-divider" aria-hidden="true"></div>
+
+                <div class="detail-row">
+                  <img
+                    src="assets/icons/location.png"
+                    alt="Lokasi"
+                    class="detail-icon"
+                  />
+                  <h3>Lokasi</h3>
+                  <p id="detail-location">Gedung Serbaguna Kasih Abadi</p>
+                  <p id="detail-address">Jl. Bahagia Selalu No. 22, Jakarta</p>
+                  <a
+                    id="detail-maps-link"
+                    href="#"
+                    target="_blank"
+                    rel="noopener"
+                    class="btn btn-outline btn-small"
+                    >Buka Peta</a
+                  >
+                </div>
+              </div>
+
+              <div class="countdown-mini" id="detail-countdown">
+                <span id="detail-cd-text"
+                  >Menghitung waktu menuju hari bahagia...</span
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PETA LOKASI -->
+        <section id="map" class="section map-section" data-popup="map">
+          <div class="hero-bg hero-bg--fade-both"></div>
+          <div class="section-inner">
+            <div class="map-frame">
+              <img
+                src="assets/images/stempel.png"
+                alt="Stempel N&amp;H"
+                class="ayat-stamp"
+              />
+              <img
+                src="assets/effects/map-flower-tr.png"
+                alt=""
+                class="ayat-flower ayat-flower--tr"
+              />
+              <img
+                src="assets/effects/map-flower-bl.png"
+                alt=""
+                class="ayat-flower ayat-flower--bl"
+              />
+
+              <p class="eyebrow">Peta Lokasi</p>
+              <h2 class="profile-role-title">Menuju Lokasi Acara</h2>
+              <div class="ayat-divider"></div>
+              <p class="section-desc">
+                Klik tombol di bawah untuk membuka rute menuju lokasi acara
+                melalui Google Maps.
+              </p>
+              <div class="map-embed-wrap">
+                <iframe
+                  id="map-embed-frame"
+                  class="map-embed-frame"
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                  allowfullscreen
+                ></iframe>
+              </div>
+              <a
+                id="map-open-link"
+                href="#"
+                target="_blank"
+                rel="noopener"
+                class="btn btn-primary ripple"
+              >
+                <img src="assets/icons/location.png" alt="" class="btn-icon" />
+                Buka di Google Maps
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- GALLERY -->
+        <section
+          id="gallery"
+          class="section gallery-section"
+          data-popup="gallery"
+        >
+          <div class="hero-bg hero-bg--fade-both"></div>
+          <div class="section-inner">
+            <div class="gallery-frame">
+              <img
+                src="assets/images/stempel.png"
+                alt="Stempel N&amp;H"
+                class="ayat-stamp"
+              />
+              <img
+                src="assets/images/frame-corner-tr.png"
+                alt=""
+                class="ayat-flower ayat-flower--tr"
+              />
+              <img
+                src="assets/images/frame-corner-bl.png"
+                alt=""
+                class="ayat-flower ayat-flower--bl"
+              />
+
+              <p class="eyebrow">Galeri</p>
+              <h2 class="profile-role-title">Momen Bahagia</h2>
+              <div class="ayat-divider"></div>
+
+              <div class="gallery-grid" id="gallery-grid">
+                <!-- diisi via JS dari config -->
+              </div>
+              <div class="gallery-add-placeholder">
+                <img
+                  src="assets/icons/camera.png"
+                  alt=""
+                  class="placeholder-icon-small"
+                />
+                <span></span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- LOVE STORY -->
+        <section
+          id="love-story"
+          class="section love-story-section"
+          data-popup="love-story"
+        >
+          <div class="hero-bg hero-bg--fade-both"></div>
+          <div class="section-inner">
+            <div class="lovestory-frame">
+              <img
+                src="assets/images/stempel.png"
+                alt="Stempel N&amp;H"
+                class="ayat-stamp"
+              />
+              <img
+                src="assets/effects/lovestory-flower-tr.png"
+                alt=""
+                class="ayat-flower ayat-flower--tr"
+              />
+              <img
+                src="assets/effects/lovestory-flower-bl.png"
+                alt=""
+                class="ayat-flower ayat-flower--bl"
+              />
+
+              <p class="eyebrow">Love Story</p>
+              <h2 class="profile-role-title">Perjalanan Kami</h2>
+              <div class="ayat-divider"></div>
+              <div class="timeline" id="love-story-timeline">
+                <!-- diisi via JS dari config -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- RSVP -->
+        <section id="rsvp" class="section rsvp-section" data-popup="rsvp">
+          <div class="hero-bg hero-bg--fade-both"></div>
+          <div class="section-inner">
+            <div class="rsvp-frame">
+              <img
+                src="assets/images/stempel.png"
+                alt="Stempel N&amp;H"
+                class="ayat-stamp"
+              />
+              <img
+                src="assets/effects/map-flower-tr.png"
+                alt=""
+                class="ayat-flower ayat-flower--tr"
+              />
+              <img
+                src="assets/effects/map-flower-bl.png"
+                alt=""
+                class="ayat-flower ayat-flower--bl"
+              />
+
+              <p class="eyebrow">RSVP</p>
+              <h2 class="profile-role-title">Konfirmasi Kehadiran</h2>
+              <div class="ayat-divider"></div>
+              <p class="section-desc">
+                Mohon konfirmasi kehadiran Anda sebelum tanggal acara. Ucapan
+                &amp; doa Anda sangat berarti bagi kami.
+              </p>
+
+              <form id="rsvp-form" class="rsvp-form">
+                <div class="form-group">
+                  <label for="rsvp-name">Nama</label>
+                  <input
+                    type="text"
+                    id="rsvp-name"
+                    name="name"
+                    placeholder="Nama Anda"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="rsvp-guest">Jumlah Tamu</label>
+                  <select id="rsvp-guest" name="guest">
+                    <option value="1">1 Orang</option>
+                    <option value="2">2 Orang</option>
+                    <option value="3">3 Orang</option>
+                    <option value="4">4 Orang</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="rsvp-attend">Kehadiran</label>
+                  <select id="rsvp-attend" name="attend">
+                    <option value="hadir">Hadir</option>
+                    <option value="tidak-hadir">Tidak Bisa Hadir</option>
+                    <option value="ragu">Masih Ragu</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="rsvp-message">Ucapan &amp; Doa</label>
+                  <textarea
+                    id="rsvp-message"
+                    name="message"
+                    rows="3"
+                    placeholder="Tulis ucapan dan doa terbaik Anda..."
+                  ></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary ripple full-width">
+                  Kirim Ucapan
+                </button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- BUKU TAMU & UCAPAN -->
+        <section
+          id="guestbook"
+          class="section guestbook-section"
+          data-popup="guestbook"
+        >
+          <div class="hero-bg hero-bg--fade-both"></div>
+          <div class="section-inner">
+            <div class="guestbook-frame">
+              <img
+                src="assets/images/stempel.png"
+                alt="Stempel N&amp;H"
+                class="ayat-stamp"
+              />
+              <img
+                src="assets/effects/detail-flower-tr.png"
+                alt=""
+                class="ayat-flower ayat-flower--tr"
+              />
+              <img
+                src="assets/effects/detail-flower-bl.png"
+                alt=""
+                class="ayat-flower ayat-flower--bl"
+              />
+
+              <p class="eyebrow">Buku Tamu</p>
+              <h2 class="profile-role-title">Ucapan &amp; Doa</h2>
+              <div class="ayat-divider"></div>
+              <p class="section-desc">
+                Kumpulan ucapan dan doa terbaik dari Bapak/Ibu/Saudara/i
+                sekalian.
+              </p>
+              <div id="rsvp-list" class="rsvp-list" aria-live="polite">
+                <!-- ucapan terkirim akan muncul di sini -->
+              </div>
+              <button
+                id="guestbook-next-btn"
+                type="button"
+                class="btn btn-outline btn-small ripple"
+                hidden
+              >
+                Lihat ucapan selanjutnya
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- GIFT / KADO DIGITAL -->
+        <section id="gift" class="section gift-section" data-popup="gift">
+          <div class="hero-bg hero-bg--fade-both"></div>
+          <div class="section-inner">
+            <div class="gift-frame">
+              <img
+                src="assets/images/stempel.png"
+                alt="Stempel N&amp;H"
+                class="ayat-stamp"
+              />
+              <img
+                src="assets/effects/lovestory-flower-tr.png"
+                alt=""
+                class="ayat-flower ayat-flower--tr"
+              />
+              <img
+                src="assets/effects/lovestory-flower-bl.png"
+                alt=""
+                class="ayat-flower ayat-flower--bl"
+              />
+
+              <p class="eyebrow">Wedding Gift</p>
+              <h2 class="profile-role-title">Kado Digital</h2>
+              <div class="ayat-divider"></div>
+              <p class="section-desc">
+                Doa restu Anda adalah karunia yang sangat berarti. Namun jika
+                ingin memberikan tanda kasih, kami sediakan di bawah ini.
+              </p>
+
+              <div class="gift-grid">
+                <div class="gift-card">
+                  <img
+                    src="assets/images/qr-placeholder.png"
+                    alt="QR Code"
+                    class="gift-qr"
+                  />
+                  <p class="gift-qr-label">Scan untuk kirim hadiah digital</p>
+                </div>
+                <div class="gift-accounts" id="gift-accounts">
+                  <!-- diisi via JS dari config -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PENUTUP / CUTSCENE -->
+        <section id="closing" class="section closing-section">
+          <div class="hero-bg hero-bg--fade-both"></div>
+          <div class="closing-path"></div>
+          <img
+            src="assets/effects/branch-corner-green.svg"
+            alt=""
+            class="closing-arch-branch closing-arch-branch--left"
+          />
+          <img
+            src="assets/effects/branch-corner-green.svg"
+            alt=""
+            class="closing-arch-branch closing-arch-branch--right"
+          />
+          <div class="closing-content">
+            <p class="eyebrow">Penutup</p>
+            <h2 class="section-title">Sampai Jumpa di Hari Bahagia</h2>
+            <img
+              src="assets/effects/branch-divider-green.svg"
+              alt=""
+              class="title-divider"
+            />
+            <p class="section-desc">
+              Dekatkan karaktermu pada sosok yang menunggu di ujung
+              perjalanan...
+            </p>
+          </div>
+
+          <div id="closing-message" class="closing-message">
+            <p id="closing-message-text" class="closing-message-text"></p>
+            <p id="closing-submessage-text" class="closing-submessage-text"></p>
+            <div class="closing-buttons">
+              <button class="btn btn-primary ripple" data-scroll-to="rsvp">
+                Kirim Ucapan
+              </button>
+              <button class="btn btn-outline ripple" data-scroll-to="guestbook">
+                Lihat Live Wall
+              </button>
+              <button class="btn btn-ghost ripple" id="thanks-btn">
+                Terima Kasih
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- ======================================================
+     VIRTUAL JOYSTICK (mobile)
+====================================================== -->
+      <div id="virtual-joystick" class="virtual-joystick" aria-hidden="true">
+        <div id="move-hint" class="move-hint">
+          <span>Gerakkan karakter untuk menjelajah</span>
+        </div>
+        <div class="joystick-base">
+          <span
+            class="joystick-chevron joystick-chevron--up"
+            aria-hidden="true"
+          ></span>
+          <div class="joystick-thumb" id="joystick-thumb">
+            <span class="joystick-thumb-arrow" aria-hidden="true"></span>
+          </div>
+          <span
+            class="joystick-chevron joystick-chevron--down"
+            aria-hidden="true"
+          ></span>
+        </div>
+      </div>
+
+      <!-- ======================================================
+     MUSIC CONTROL WIDGET
+====================================================== -->
+      <div id="music-widget" class="music-widget">
+        <button
+          id="music-toggle-btn"
+          class="music-toggle-btn"
+          aria-label="Putar / Jeda Musik"
+        >
+          <img
+            src="assets/icons/music.png"
+            alt=""
+            id="music-icon"
+            class="spin-slow"
+          />
+        </button>
+        <div class="music-panel" id="music-panel">
+          <button id="music-play-pause" class="music-panel-btn">
+            <img
+              src="assets/icons/pause.png"
+              alt="Pause"
+              id="play-pause-icon"
+            />
+          </button>
+          <input
+            type="range"
+            id="music-volume"
+            class="music-volume"
+            min="0"
+            max="100"
+            value="60"
+          />
+        </div>
+      </div>
+
+      <!-- ======================================================
+     LIGHTBOX (Gallery)
+====================================================== -->
+      <div id="lightbox" class="lightbox">
+        <button id="lightbox-close" class="lightbox-close">
+          <img src="assets/icons/close.png" alt="Tutup" />
+        </button>
+        <img id="lightbox-image" src="" alt="Galeri" class="lightbox-image" />
+        <p id="lightbox-caption" class="lightbox-caption"></p>
+      </div>
+
+      <!-- ======================================================
+     TOAST NOTIFICATION
+====================================================== -->
+      <div id="toast" class="toast"></div>
+    </div>
+    <!-- /#app-frame -->
+
+    <!-- ======================================================
+     EXTERNAL LIBRARIES
+====================================================== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+
+    <!-- ======================================================
+     APP MODULES (urutan penting)
+====================================================== -->
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/guestName.js"></script>
+    <script src="assets/js/viewportLock.js"></script>
+    <script src="assets/js/loader.js"></script>
+    <script src="assets/js/musicPlayer.js"></script>
+    <script src="assets/js/effects.js"></script>
+    <script src="assets/js/popup.js"></script>
+    <script src="assets/js/countdown.js"></script>
+    <script src="assets/js/contentBuilder.js"></script>
+    <script src="assets/js/gallery.js"></script>
+    <script src="assets/js/rsvp.js"></script>
+    <script src="assets/js/gift.js"></script>
+    <script src="assets/js/character.js"></script>
+    <script src="assets/js/controls.js"></script>
+    <script src="assets/js/joystick.js"></script>
+    <script src="assets/js/gameStage.js"></script>
+    <script src="assets/js/cutscene.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

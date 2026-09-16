@@ -1,0 +1,90 @@
+/**
+ * ============================================================
+ *  VARIABLES.CSS — Design Tokens
+ *  Ubah nilai di sini untuk mengubah keseluruhan tampilan tema.
+ * ============================================================
+ */
+:root {
+  /* ---------- Warna Utama ---------- */
+  --color-cream: #fbf6ec;
+  --color-cream-soft: #f7f0e2;
+  --color-cream-dark: #ecdfc4;
+  --color-white: #ffffff;
+
+  --color-sage: #8a2f42;
+  --color-sage-dark: #4a1622;
+  --color-sage-soft: #f3e6d5;
+
+  --color-gold: #b99a4e;
+  --color-gold-light: #dcc27c;
+
+  --color-brown: #5c4433;
+  --color-brown-light: #b08968;
+
+  --color-ink: #332a24;
+  --color-ink-soft: #6e5f52;
+
+  --color-rose: #d98a95;
+  --color-maroon: #6d2233;
+  --color-maroon-dark: #4a1622;
+
+  /* ---------- Gradasi ---------- */
+  --gradient-hero: linear-gradient(180deg, rgba(46, 34, 24, 0.18) 0%, rgba(40, 28, 18, 0.58) 100%);
+  --gradient-gold: linear-gradient(135deg, var(--color-gold-light), var(--color-gold));
+  --gradient-sage: linear-gradient(135deg, var(--color-gold), var(--color-maroon));
+  --gradient-meadow: linear-gradient(180deg, var(--color-cream) 0%, var(--color-sage-soft) 55%, var(--color-gold-light) 100%);
+
+  /* ---------- Tipografi ---------- */
+  --font-display: "Cormorant Garamond", "Georgia", serif;
+  --font-heading: "Poppins", sans-serif;
+  --font-body: "Nunito", sans-serif;
+
+  --fs-hero-name: clamp(2.6rem, 9vw, 5.2rem);
+  --fs-h1: clamp(1.8rem, 4.5vw, 2.6rem);
+  --fs-h2: clamp(1.4rem, 3vw, 1.9rem);
+  --fs-body: 1rem;
+  --fs-small: 0.85rem;
+
+  /* ---------- Spacing ---------- */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.75rem;
+  --space-lg: 3rem;
+  --space-xl: 5rem;
+
+  /* ---------- Radius & Shadow ---------- */
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+  --radius-pill: 999px;
+
+  --shadow-soft: 0 8px 30px rgba(92, 68, 51, 0.12);
+  --shadow-elevated: 0 16px 45px rgba(92, 68, 51, 0.18);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+
+  /* ---------- Glassmorphism ---------- */
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.65);
+  --glass-blur: blur(14px);
+
+  /* ---------- Karakter & Stage ---------- */
+  --character-size: 72px;
+  --character-size-mobile: 56px;
+
+  /* ---------- Transisi ---------- */
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-fast: 0.2s var(--ease-smooth);
+  --transition-medium: 0.45s var(--ease-smooth);
+  --transition-slow: 0.9s var(--ease-smooth);
+
+  /* ---------- Z-Index Layers ---------- */
+  --z-background: 1;
+  --z-content: 10;
+  --z-game-stage: 500;
+  --z-joystick: 600;
+  --z-music: 610;
+  --z-popup: 700;
+  --z-lightbox: 800;
+  --z-loading: 900;
+  --z-toast: 950;
+}

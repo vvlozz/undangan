@@ -1,0 +1,598 @@
+/**
+ * ============================================================
+ *  COMPONENTS.CSS — Komponen UI yang dapat dipakai ulang
+ * ============================================================
+ */
+
+/* ---------------------------------------------------------
+   BUTTONS
+--------------------------------------------------------- */
+.btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 2rem;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: var(--radius-pill);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active { transform: scale(0.97); }
+.btn-icon { width: 18px; height: 18px; }
+
+.btn-primary {
+  background: var(--gradient-gold);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-soft);
+}
+.btn-primary:hover { box-shadow: var(--shadow-elevated); transform: translateY(-2px); }
+
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--color-sage-dark);
+  color: var(--color-sage-dark);
+}
+.btn-outline:hover { background: var(--color-sage-soft); }
+.btn-outline:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-ghost {
+  background: rgba(255,255,255,0.35);
+  color: var(--color-ink);
+  border: 1px solid rgba(92,68,51,0.15);
+}
+
+.btn-small { padding: 0.55rem 1.3rem; font-size: 0.8rem; margin-top: 0.75rem; }
+.full-width { width: 100%; }
+
+/* Ripple effect */
+.ripple span.ripple-circle {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  opacity: 0;
+  background: rgba(220, 194, 124, 0.35); /* emas lembut, bukan putih solid */
+  animation: rippleAnim 0.6s ease-out;
+  pointer-events: none;
+}
+@keyframes rippleAnim {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+/* ---------------------------------------------------------
+   LOADING SCREEN
+--------------------------------------------------------- */
+#loading-screen {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: max(0px, calc(50% - 240px));
+  right: max(0px, calc(50% - 240px));
+  z-index: var(--z-loading);
+  background-color: var(--color-cream);
+  background-image:
+    url("../images/backgrounds/bg-loading.jpg"),
+    url("../images/hero-card-texture.jpg");
+  background-size: cover, cover;
+  background-position: center center, center center;
+  background-repeat: no-repeat, no-repeat;
+  background-blend-mode: multiply, normal;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  transition: opacity var(--transition-slow), visibility var(--transition-slow);
+}
+#loading-screen.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+/* Di HP/tablet (perangkat sentuh), layar loading tampil FULL selebar
+   layar sungguhan, tidak dibatasi ke lebar "kartu" 480px yang dipakai
+   untuk simulasi tampilan HP di layar desktop/lebar. */
+@media (hover: none) and (pointer: coarse) {
+  #loading-screen { left: 0; right: 0; }
+}
+.loading-logo {
+  width: 128px;
+  height: 128px;
+  object-fit: contain;
+  animation: floatLogo 2.4s ease-in-out infinite;
+  margin-bottom: var(--space-xs);
+}
+@keyframes floatLogo {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.loading-title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-style: italic;
+  color: var(--color-ink);
+}
+.loading-hashtag {
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--color-maroon);
+  margin: var(--space-xs) 0;
+}
+.loading-bar-track {
+  width: 220px;
+  height: 6px;
+  background: var(--color-cream-dark);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  margin-top: var(--space-sm);
+}
+.loading-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--gradient-sage);
+  border-radius: var(--radius-pill);
+  transition: width 0.25s var(--ease-smooth);
+}
+.loading-caption {
+  font-size: var(--fs-small);
+  color: var(--color-ink-soft);
+}
+
+/* ---------------------------------------------------------
+   POPUP DIALOG (mengikuti karakter)
+--------------------------------------------------------- */
+.popup-dialog {
+  position: absolute;
+  z-index: var(--z-popup);
+  min-width: 190px;
+  max-width: 240px;
+  opacity: 0;
+  transform: translate(-50%, calc(-100% + 10px)) scale(0.9);
+  pointer-events: none;
+  transition: opacity 0.35s var(--ease-smooth), transform 0.35s var(--ease-smooth);
+}
+.popup-dialog.visible {
+  opacity: 1;
+  transform: translate(-50%, calc(-100% - 10px)) scale(1);
+}
+.popup-dialog__inner {
+  position: relative;
+  background: linear-gradient(180deg, #fffaf1, #f2ecd9);
+  border: 1.5px solid var(--color-gold);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.1rem;
+  box-shadow: var(--shadow-elevated);
+  text-align: center;
+  overflow: hidden;
+}
+.popup-dialog__inner::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: -4px;
+  width: 26px;
+  height: 26px;
+  background-image: url('../effects/branch-sprig-green.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  transform: rotate(35deg) scaleX(-1);
+  opacity: 0.55;
+  pointer-events: none;
+}
+.popup-dialog__inner p {
+  font-size: 0.82rem;
+  color: var(--color-brown);
+  font-weight: 600;
+  line-height: 1.4;
+}
+.popup-dialog__tail {
+  width: 14px;
+  height: 14px;
+  background: #f7ecd6;
+  border-right: 1.5px solid var(--color-gold);
+  border-bottom: 1.5px solid var(--color-gold);
+  transform: rotate(45deg) translateX(-50%);
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+}
+
+/* ---------------------------------------------------------
+   MUSIC WIDGET
+--------------------------------------------------------- */
+/* ---------------------------------------------------------
+   MUSIC WIDGET
+--------------------------------------------------------- */
+.music-widget {
+  position: fixed;
+  top: max(1rem, env(safe-area-inset-top));
+  right: max(1rem, calc(50% - 240px + 1rem), env(safe-area-inset-right));
+  z-index: var(--z-music);
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: auto;
+}
+.music-toggle-btn {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  border-radius: 50%;
+  background: var(--gradient-gold);
+  box-shadow: var(--shadow-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.music-toggle-btn img { width: 24px; height: 24px; }
+.music-toggle-btn.paused .spin-slow { animation-play-state: paused; }
+
+.music-panel {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-soft);
+  transform: scaleX(0);
+  transform-origin: right center;
+  width: 0;
+  overflow: hidden;
+  transition: transform var(--transition-medium), width var(--transition-medium);
+}
+.music-panel.expanded {
+  transform: scaleX(1);
+  width: 150px;
+}
+.music-panel-btn img { width: 18px; height: 18px; }
+.music-volume {
+  width: 90px;
+  accent-color: var(--color-sage-dark);
+  touch-action: pan-x; /* slider tetap bisa di-drag jari walau html/body touch-action:none di HP */
+}
+
+/* ---------------------------------------------------------
+   VIRTUAL JOYSTICK
+--------------------------------------------------------- */
+.virtual-joystick {
+  position: fixed;
+  right: max(1rem, calc(50% - 240px + 1rem), env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: var(--z-joystick);
+  display: none;
+  touch-action: none;
+  pointer-events: auto;
+}
+.virtual-joystick.active { display: block; }
+.joystick-base {
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  border: 2px solid rgba(255,255,255,0.68);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  position: relative;
+  box-shadow: 0 10px 30px rgba(20,26,14,0.2), inset 0 1px 0 rgba(255,255,255,0.65);
+}
+.joystick-thumb {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--gradient-gold);
+  box-shadow: 0 4px 12px rgba(92,68,51,0.35);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.05s linear;
+}
+
+/* Chevron atas/bawah — indikator visual saja (murni dekoratif, tidak
+   menangkap event apa pun), supaya HUD terlihat seperti panah naik/turun.
+   Drag sesungguhnya tetap bebas segala arah seperti sebelumnya — ini
+   TIDAK mengubah cara kerja joystick.js sama sekali. */
+.joystick-chevron {
+  position: absolute;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  border-top: 2px solid var(--color-brown);
+  border-right: 2px solid var(--color-brown);
+  opacity: .75;
+  pointer-events: none;
+}
+.joystick-chevron--up {
+  top: 12px;
+  transform: translateX(-50%) rotate(-45deg);
+}
+.joystick-chevron--down {
+  bottom: 12px;
+  transform: translateX(-50%) rotate(135deg);
+}
+
+/* Ikon panah di dalam thumb — dekoratif, ikut bergerak bareng thumb
+   karena jadi child-nya, tapi tidak ikut menerima event drag. */
+.joystick-thumb-arrow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.joystick-thumb-arrow::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  background-image: url("../icons/arrow-up.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: brightness(0) invert(1);
+  transform: translate(-50%, -50%) rotate(180deg);
+}
+
+/* ---------------------------------------------------------
+   VIRTUAL JOYSTICK
+--------------------------------------------------------- */
+/* Cincin perhatian saat karakter belum pernah digerakkan. */
+.virtual-joystick.needs-attention .joystick-base::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid var(--color-gold-light);
+  animation: joystickPulseRing 1.6s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes joystickPulseRing {
+  0% { transform: scale(0.85); opacity: 0.9; }
+  70%, 100% { transform: scale(1.55); opacity: 0; }
+}
+
+/* ---------------------------------------------------------
+   MOVE HINT — bubble "Gerakkan tombol ini!" di atas joystick,
+   mencolok & bergoyang supaya langsung menarik perhatian tamu,
+   lalu hilang otomatis begitu karakter mulai digerakkan.
+--------------------------------------------------------- */
+.move-hint {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 14px);
+  left: auto;
+  width: min(174px, calc(100vw - 1.5rem));
+  max-width: 174px;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.35;
+  background: var(--gradient-gold);
+  color: var(--color-ink);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  padding: 0.58rem 0.8rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 22px rgba(20,26,14,0.28), 0 0 0 2px rgba(255,255,255,0.5) inset;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px) scale(0.96);
+  animation: moveHintFloat 2.4s ease-in-out infinite;
+  transition: opacity 0.35s ease, visibility 0.35s ease, transform 0.35s ease;
+  z-index: 2;
+}
+.move-hint.visible { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+.move-hint.dismissed { opacity: 0; visibility: hidden; transform: translateY(8px) scale(0.94); }
+.move-hint::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 24px;
+  border: 7px solid transparent;
+  border-top-color: var(--color-gold);
+}
+@keyframes moveHintFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-4px) scale(1.01); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .move-hint, .virtual-joystick.needs-attention .joystick-base::before {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------
+   LIGHTBOX
+--------------------------------------------------------- */
+.lightbox {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: max(0px, calc(50% - 240px));
+  right: max(0px, calc(50% - 240px));
+  background: rgba(30, 22, 16, 0.9);
+  z-index: var(--z-lightbox);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-medium), visibility var(--transition-medium);
+}
+.lightbox.open { opacity: 1; visibility: visible; }
+.lightbox-image {
+  max-width: 88%;
+  max-height: 78vh;
+  border-radius: var(--radius-md);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  transform: scale(0.92);
+  transition: transform var(--transition-medium);
+}
+.lightbox.open .lightbox-image { transform: scale(1); }
+.lightbox-caption {
+  margin-top: var(--space-sm);
+  color: var(--color-cream);
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+.lightbox-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lightbox-close img { width: 18px; height: 18px; filter: invert(1); }
+
+/* ---------------------------------------------------------
+   TOAST NOTIFICATION
+--------------------------------------------------------- */
+.toast {
+  position: fixed;
+  top: 1.5rem;
+  left: 50%;
+  transform: translate(-50%, -20px);
+  background: var(--color-ink);
+  color: var(--color-cream);
+  padding: 0.75rem 1.4rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 600;
+  z-index: var(--z-toast);
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: var(--shadow-elevated);
+  transition: all var(--transition-medium);
+}
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ---------------------------------------------------------
+   FORM ELEMENTS (RSVP)
+--------------------------------------------------------- */
+.form-group {
+  margin-bottom: var(--space-sm);
+  text-align: left;
+}
+.form-group label {
+  display: block;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--color-brown);
+  margin-bottom: 0.35rem;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--color-cream-dark);
+  background: var(--color-white);
+  color: var(--color-ink);
+  transition: border-color var(--transition-fast);
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--color-sage);
+  outline: none;
+}
+
+/* RSVP submitted list */
+.rsvp-list {
+  margin-top: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+.rsvp-list-item {
+  background: var(--color-white);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1.1rem;
+  box-shadow: var(--shadow-soft);
+  border-left: 3px solid var(--color-sage);
+  animation: fadeSlideIn 0.5s var(--ease-smooth);
+}
+.rsvp-list-item strong { color: var(--color-brown); }
+.rsvp-list-item p { font-size: 0.85rem; color: var(--color-ink-soft); margin-top: 0.2rem; }
+.rsvp-list-status {
+  font-size: 0.85rem;
+  color: var(--color-ink-soft);
+  text-align: center;
+  font-style: italic;
+  padding: 0.6rem 0;
+  margin: 0;
+}
+.rsvp-list-status--empty { font-style: normal; }
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------------------------------------------------------
+   COUNTDOWN
+--------------------------------------------------------- */
+.hero-countdown {
+  display: flex;
+  gap: 0.75rem;
+  margin: var(--space-md) 0;
+}
+.countdown-item {
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.9rem;
+  min-width: 62px;
+  text-align: center;
+}
+.countdown-value {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-white);
+}
+.countdown-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.85);
+}
+.countdown-mini {
+  margin-top: var(--space-md);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--color-sage-dark);
+  font-size: 0.9rem;
+}

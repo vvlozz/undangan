@@ -1,0 +1,186 @@
+/**
+ * ============================================================
+ *  BASE.CSS — Reset & Aturan Dasar
+ * ============================================================
+ */
+/* Kunci zoom & gesture pinch di perangkat mobile. `touch-action: pan-y`
+   mengizinkan scroll vertikal normal tapi mencegah pinch-zoom & double-tap
+   zoom (lebih kuat daripada mengandalkan meta viewport saja, karena
+   sebagian browser modern -Safari iOS terutama- mengabaikan
+   user-scalable=no demi alasan aksesibilitas). */
+html, body {
+  touch-action: pan-y;
+  -ms-touch-action: pan-y;
+}
+
+/* Di perangkat sentuh (HP/tablet), scroll manual dengan jari DIMATIKAN —
+   satu-satunya cara berpindah/menjelajah adalah dengan menggerakkan
+   karakter lewat joystick HUD (kamera otomatis mengikuti lewat
+   window.scrollTo() di GameStage.js, yang TIDAK terpengaruh oleh
+   touch-action karena itu scroll terprogram, bukan gestur sentuh).
+   Menyasar kapabilitas input (hover:none + pointer:coarse), bukan lebar
+   layar, supaya desktop/laptop (mouse+scroll wheel) tetap seperti biasa. */
+@media (hover: none) and (pointer: coarse) {
+  html, body {
+    touch-action: none;
+    -ms-touch-action: none;
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  /* Character camera uses per-frame scroll updates; smooth scrolling here
+     would make those updates lag behind the character. Interactive buttons
+     opt into smooth scrolling explicitly in JS. */
+  scroll-behavior: auto;
+  overscroll-behavior-x: none;
+}
+
+body {
+  font-family: var(--font-body);
+  background: #efe6d8;
+  color: var(--color-ink);
+  overflow-x: hidden;
+  position: relative;
+  overscroll-behavior-x: none;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ---------------------------------------------------------
+   APP FRAME — mengunci tampilan selebar layar HP di semua
+   perangkat. Di layar lebar (PC/tablet), halaman tampil sebagai
+   kartu selebar ponsel di tengah, dikelilingi latar netral.
+   Cukup position:relative (BUKAN transform) supaya elemen
+   position:fixed (widget musik, joystick, toast, lightbox, dst)
+   tetap berpatokan pada viewport asli & scroll tetap presisi;
+   yang dikunci ke lebar bingkai hanya elemen position:absolute
+   di dalamnya (mis. #game-stage) lewat lebar 100% relatif.
+--------------------------------------------------------- */
+#app-frame {
+  position: relative;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--color-cream);
+  box-shadow: 0 25px 70px rgba(30,22,16,0.28);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+::selection {
+  background: var(--color-gold-light);
+  color: var(--color-ink);
+}
+
+/* Scrollbar halus */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream-soft);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-sage);
+  border-radius: var(--radius-pill);
+}
+
+/* ---------- Utility ---------- */
+.hidden-until-ready {
+  opacity: 0;
+}
+
+.eyebrow {
+  font-family: var(--font-heading);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--color-sage-dark);
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h1);
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: var(--space-sm);
+}
+
+.section-desc {
+  max-width: 560px;
+  margin: 0 auto var(--space-lg);
+  color: var(--color-ink-soft);
+  font-size: var(--fs-body);
+}
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-soft);
+}
+
+.rotate-down {
+  animation: bounceDown 1.6s ease-in-out infinite;
+}
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0) rotate(180deg); }
+  50% { transform: translateY(8px) rotate(180deg); }
+}
+
+.spin-slow {
+  animation: spinSlow 8s linear infinite;
+}
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus visibility for accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}

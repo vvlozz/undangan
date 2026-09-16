@@ -1,0 +1,146 @@
+/**
+ * ============================================================
+ *  CHARACTER.CSS — Game Stage & Karakter Pixel
+ * ============================================================
+ */
+
+/* Stage membentang di seluruh tinggi dokumen, mengambang di atas konten.
+   Tinggi aktual (px) diset dinamis lewat JS (GameStage) karena body memiliki
+   tinggi otomatis sehingga height:100% saja tidak cukup akurat. */
+#game-stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: var(--z-game-stage);
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* Wrapper posisi (diposisikan lewat JS via transform: translate(x,y)).
+   PENTING: elemen ini TIDAK boleh punya animasi CSS yang mengubah `transform`,
+   karena animasi transform akan menimpa transform posisi inline dari JS.
+   Animasi visual (bob berjalan, napas idle) diterapkan pada .character-sprite
+   di dalamnya agar tidak bentrok. */
+.character {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--character-size);
+  height: calc(var(--character-size) * 1.5);
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Elemen visual (sprite) di dalam wrapper - aman menerima animasi transform */
+.character-sprite {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: bottom center;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.character-shadow {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 12px;
+  background: radial-gradient(ellipse, rgba(62,47,35,0.35) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+/* Sprite pria & wanita: hanya membedakan urutan tumpukan (z-index) */
+.groom-sprite { z-index: 2; }
+.bride-sprite { z-index: 1; }
+
+/* Animasi berjalan: bobbing halus — diterapkan pada .character-sprite (BUKAN
+   wrapper .character) agar tidak menimpa transform posisi yang diset JS */
+.character-sprite.walking {
+  animation: characterBob 0.45s ease-in-out infinite;
+}
+@keyframes characterBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.character-sprite.idle-breathe {
+  animation: idleBreathe 2.6s ease-in-out infinite;
+}
+@keyframes idleBreathe {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  50% { transform: translateY(-2px) scaleY(1.02); }
+}
+
+/* Efek berkilau saat karakter mendekati sebuah section (indikator interaksi) */
+.character.near-trigger::after {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  transform: translateX(-50%);
+  background: var(--color-gold-light);
+  border-radius: 50%;
+  box-shadow: 0 0 12px 4px rgba(227, 201, 122, 0.8);
+  animation: triggerPulse 1s ease-in-out infinite;
+}
+@keyframes triggerPulse {
+  0%, 100% { opacity: 0.4; transform: translateX(-50%) scale(0.8); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.3); }
+}
+
+/* Kontainer partikel efek (petal, confetti, sparkle) - memenuhi stage penuh */
+#effects-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* Efek partikel (petal, confetti, sparkle) di-generate JS, styling dasar di sini */
+.fx-particle {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.heart-burst {
+  position: absolute;
+  font-size: 1.8rem;
+  pointer-events: none;
+  animation: heartFloat 1.6s var(--ease-smooth) forwards;
+}
+@keyframes heartFloat {
+  0% { opacity: 0; transform: translateY(0) scale(0.4); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-70px) scale(1.2); }
+}
+
+/* Stabilkan sprite pixel-art saat wrapper bergerak. Posisi wrapper dibulatkan
+   oleh JS agar tidak terjadi shimmer/flicker akibat sub-pixel compositing. */
+.character,
+.character-sprite {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: flat;
+}
+
+.character {
+  /* "paint" sengaja TIDAK dipakai di sini: contain:paint mengklip apa pun
+     yang melewati batas box wrapper (mirip overflow:hidden). Animasi bob
+     jalan (translateY) & idle-breathe (scaleY) pada .character-sprite
+     butuh sedikit ruang lebih di atas box, kalau paint aktif kepala
+     karakter jadi kepotong tiap kali animasi itu jalan. */
+  contain: layout style;
+}

@@ -1,0 +1,103 @@
+/**
+ * ============================================================
+ *  RESPONSIVE.CSS — Tampilan Mobile (dikunci aktif permanen)
+ * ============================================================
+ *  Situs ini sengaja dikunci menampilkan tata letak HP di semua
+ *  perangkat — lihat #app-frame di base.css yang membungkus
+ *  seluruh halaman dalam kartu selebar layar ponsel (max 480px),
+ *  dipusatkan di layar lebar seperti PC/tablet.
+ *
+ *  Supaya grid, ukuran font, dan spacing ikut menyesuaikan ke
+ *  versi mobile (bukan cuma lebar kartunya saja yang menyempit),
+ *  aturan yang dulunya di dalam @media (max-width: ...) berikut
+ *  ini sekarang SELALU aktif, tanpa syarat lebar viewport asli.
+ */
+
+:root {
+  --character-size: var(--character-size-mobile);
+  --space-xl: 2.3rem;
+}
+
+.section { padding: var(--space-xl) 1.1rem; }
+
+.hero-names { font-size: clamp(2.2rem, 11vw, 3.4rem); }
+.hero-countdown { gap: 0.4rem; }
+.invited-guest { padding: 0.75rem 1.4rem; margin-top: var(--space-sm); }
+.invited-guest-name { font-size: clamp(1rem, 4.4vw, 1.3rem); }
+.countdown-item { min-width: 52px; padding: 0.5rem 0.6rem; }
+.countdown-value { font-size: 1.1rem; }
+
+.detail-grid { grid-template-columns: 1fr; }
+.gallery-grid { grid-template-columns: repeat(2, 1fr); }
+.gift-grid { grid-template-columns: 1fr; }
+.profile-grid { flex-direction: column; }
+.profile-card { max-width: 100%; width: 100%; }
+.profile-amp { order: 0; }
+
+.timeline::before { left: 18px; }
+.timeline-item { padding-left: 48px; }
+
+.rsvp-form { padding: var(--space-md); }
+
+/* Joystick virtual selalu ditampilkan (lihat juga joystick.js) */
+.virtual-joystick.enabled-mobile { display: block; }
+
+.music-panel.expanded { width: 130px; }
+
+.closing-buttons { flex-direction: column; width: 100%; }
+.closing-buttons .btn { width: 100%; }
+
+.corner-branch { width: 88px; height: 88px; }
+.closing-arch-branch { width: 96px; height: 96px; opacity: 0.5; }
+.title-divider { width: 96px; }
+
+/* Setelan "mobile kecil" dijadikan default juga, agar tampilan
+   konsisten selayar HP kecil di semua kondisi */
+.hero-names { font-size: 2rem; }
+.popup-dialog { width: min(180px, calc(100vw - 1.5rem)); min-width: 0; }
+
+/* ---------------------------------------------------------
+   Perangkat dengan input sentuh (tampilkan hint joystick)
+   — ini tetap berdasarkan kapabilitas input, bukan lebar layar
+--------------------------------------------------------- */
+
+@media (max-width: 360px) {
+  .virtual-joystick { bottom: max(0.75rem, env(safe-area-inset-bottom)); right: max(0.75rem, env(safe-area-inset-right)); }
+  .joystick-base { width: 92px; height: 92px; }
+  .music-widget { top: max(0.75rem, env(safe-area-inset-top)); right: max(0.75rem, env(safe-area-inset-right)); }
+  .music-toggle-btn { width: 48px; height: 48px; flex-basis: 48px; }
+  .music-panel.expanded { width: 118px; }
+  .music-volume { width: 70px; }
+}
+
+/* ---------------------------------------------------------
+   HERO — muat sempurna di layar PENDEK (tinggi layar kecil)
+   Dipicu oleh tinggi viewport (max-height), bukan lebar, jadi
+   sama sekali tidak mengubah tampilan di HP dengan tinggi layar
+   normal/besar. Hanya mengecilkan padding & font khusus hero
+   supaya seluruh kartu (stempel s/d tombol) tetap pas 1 layar.
+--------------------------------------------------------- */
+@media (max-height: 700px) {
+  .hero-content { padding: 2.4rem 1rem 2.4rem; }
+  .hero-card { padding: 3rem 1.4rem 1.5rem; }
+  .hero-stamp { top: -38px; width: 78px; }
+  .hero-names { font-size: clamp(2.1rem, 10vw, 3.1rem); }
+  .hero-date { margin-top: .6rem; }
+  .invited-guest { margin-top: 1rem; padding: .75rem 1.2rem .8rem; }
+  .hero-countdown { margin-top: .8rem; }
+  .countdown-item { padding: .5rem .3rem .4rem; }
+  .hero-content .btn-primary { margin-top: .4rem; min-height: 44px; }
+}
+
+@media (max-height: 580px) {
+  .hero-content { padding: 1.8rem 1rem 1.8rem; }
+  .hero-card { padding: 2.5rem 1.2rem 1.2rem; }
+  .hero-stamp { top: -32px; width: 66px; }
+  .hero-names { font-size: clamp(1.8rem, 9vw, 2.6rem); }
+  .invited-guest { margin-top: .8rem; padding: .6rem 1rem .65rem; }
+  .invited-guest-name { font-size: clamp(.95rem, 4vw, 1.15rem); }
+  .hero-countdown { margin-top: .6rem; gap: .3rem; }
+  .countdown-item { padding: .4rem .25rem .3rem; }
+  .countdown-value { font-size: 1rem; }
+  .hero-content .btn-primary { margin-top: .3rem; min-height: 40px; padding-inline: 1.3rem; }
+}
