@@ -42,6 +42,24 @@ const Gallery = {
     track.innerHTML = html(0) + html(1);
     track.style.setProperty("--marquee-duration", `${this.items.length * 5}s`);
 
+    // Jalankan animasi setelah semua thumbnail selesai dimuat (atau maks 3 dtk).
+    // Di Safari, animasi yang dimulai saat lebar track belum final bisa
+    // tidak tergambar sampai layar disentuh.
+    const imgs = Array.from(track.querySelectorAll("img"));
+    const loaded = Promise.all(
+      imgs.map((im) =>
+        im.complete
+          ? Promise.resolve()
+          : new Promise((r) => {
+              im.addEventListener("load", r, { once: true });
+              im.addEventListener("error", r, { once: true });
+            })
+      )
+    );
+    Promise.race([loaded, new Promise((r) => setTimeout(r, 3000))]).then(() => {
+      requestAnimationFrame(() => requestAnimationFrame(() => track.classList.add("is-ready")));
+    });
+
     track.addEventListener("click", (e) => {
       const btn = e.target.closest(".gallery-thumb");
       if (!btn) return;
