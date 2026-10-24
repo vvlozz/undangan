@@ -527,8 +527,6 @@
   background-position: center;
 }
 .profile-avatar.has-photo { border-color: var(--color-gold-light); }
-.profile-avatar.has-photo .placeholder-icon-small { display: none; }
-.placeholder-icon-small { width: 26px; height: 26px; opacity: 0.55; }
 .profile-frame h3 {
   font-family: var(--font-display);
   font-size: 1.3rem;
@@ -542,34 +540,6 @@
   margin-bottom: 0.15rem;
 }
 .profile-parents { font-size: 0.85rem; color: var(--color-ink-soft); }
-
-/* ---------------------------------------------------------
-   PLACEHOLDER FOTO (prewedding, dsb) — dipakai di mana saja
-   yang butuh slot foto tapi belum diisi oleh user.
---------------------------------------------------------- */
-.profile-photo-placeholder {
-  max-width: 420px;
-  margin: 0 auto var(--space-lg);
-  padding: var(--space-lg) var(--space-md);
-  border: 2px dashed var(--color-gold-light);
-  border-radius: var(--radius-lg);
-  background: rgba(255,255,255,0.45);
-  color: var(--color-ink-soft);
-}
-.profile-photo-placeholder .placeholder-icon { width: 34px; height: 34px; opacity: 0.6; margin: 0 auto 0.6rem; }
-.profile-photo-placeholder p { font-family: var(--font-heading); font-weight: 600; font-size: 0.9rem; color: var(--color-brown); }
-.profile-photo-placeholder .placeholder-hint { font-size: 0.72rem; opacity: 0.75; }
-
-.gallery-add-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: var(--space-md);
-  font-size: 0.75rem;
-  color: var(--color-ink-soft);
-  opacity: 0.75;
-}
 
 /* ---------------------------------------------------------
    PETA LOKASI

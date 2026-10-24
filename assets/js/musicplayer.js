@@ -77,7 +77,15 @@ const MusicPlayer = {
   _fallbackBgm(err, stage) {
     if (this._bgmFallbackTried) return; // sudah pernah fallback sekali, jangan diulang terus
     this._bgmFallbackTried = true;
-    console.warn(`[MusicPlayer] BGM gagal ${stage} lewat Web Audio, fallback ke html5 audio:`, err);
+    console.warn(
+      `[MusicPlayer] BGM gagal ${stage} lewat Web Audio, fallback ke html5 audio:`,
+      err,
+    );
+    // Matikan & buang Howl lama dulu. Kalau tidak, BGM Web Audio yang masih
+    // mengantre (karena file belum selesai diunduh) akan ikut bunyi begitu
+    // selesai dimuat -> musik dobel dan tombol pause hanya menghentikan satu.
+    this.bgm.off();
+    this.bgm.unload();
     this.bgm = this._createBgmHowl(true);
     if (this.isPlaying) this.bgm.play(); // lanjutkan muter kalau memang seharusnya sedang jalan
   },
@@ -86,7 +94,12 @@ const MusicPlayer = {
   _fallbackRomantic(err, stage) {
     if (this._romanticFallbackTried) return;
     this._romanticFallbackTried = true;
-    console.warn(`[MusicPlayer] Musik romantis gagal ${stage} lewat Web Audio, fallback ke html5 audio:`, err);
+    console.warn(
+      `[MusicPlayer] Musik romantis gagal ${stage} lewat Web Audio, fallback ke html5 audio:`,
+      err,
+    );
+    this.romantic.off();
+    this.romantic.unload();
     this.romantic = this._createRomanticHowl(true);
   },
 
@@ -122,7 +135,11 @@ const MusicPlayer = {
     // keadaan "suspended" walau ini dipanggil dari dalam sentuhan/klik
     // pengguna. resume() eksplisit di sini tidak berbahaya dipanggil
     // walau contextnya sudah aktif (no-op kalau memang sudah "running").
-    if (typeof Howler !== "undefined" && Howler.ctx && Howler.ctx.state === "suspended") {
+    if (
+      typeof Howler !== "undefined" &&
+      Howler.ctx &&
+      Howler.ctx.state === "suspended"
+    ) {
       Howler.ctx.resume();
     }
     if (!this.bgm.playing()) this.bgm.play();
@@ -136,8 +153,13 @@ const MusicPlayer = {
     // audio yang jauh lebih sederhana & jarang macet.
     setTimeout(() => {
       if (this.isPlaying && !this._bgmFallbackTried && !this.bgm.playing()) {
-        console.warn("[MusicPlayer] BGM belum bunyi setelah 2 detik, paksa fallback ke html5 audio.");
-        this._fallbackBgm("timeout, tidak ada error tapi tidak juga bunyi", "timeout");
+        console.warn(
+          "[MusicPlayer] BGM belum bunyi setelah 2 detik, paksa fallback ke html5 audio.",
+        );
+        this._fallbackBgm(
+          "timeout, tidak ada error tapi tidak juga bunyi",
+          "timeout",
+        );
       }
     }, 2000);
   },

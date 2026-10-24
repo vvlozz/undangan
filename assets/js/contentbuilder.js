@@ -16,16 +16,17 @@ const ContentBuilder = {
     this._renderMap();
     this._renderLoveStory();
     this._renderGift();
-    document.title = `${WEDDING_CONFIG.couple.brideName} & ${WEDDING_CONFIG.couple.groomName} — Undangan Pernikahan Digital`;
+    document.title = `${WEDDING_CONFIG.couple.brideName} & ${WEDDING_CONFIG.couple.groomName} — Mohon Doa Restu`;
     Utils.$("#meta-description").setAttribute(
       "content",
-      `Undangan pernikahan digital interaktif ${WEDDING_CONFIG.couple.brideName} & ${WEDDING_CONFIG.couple.groomName}`
+      `Pernikahan ${WEDDING_CONFIG.couple.brideName} & ${WEDDING_CONFIG.couple.groomName}`,
     );
   },
 
   _renderLoadingScreen() {
     const { couple } = WEDDING_CONFIG;
-    Utils.$("#loading-title").textContent = `${couple.brideName} & ${couple.groomName}`;
+    Utils.$("#loading-title").textContent =
+      `${couple.brideName} & ${couple.groomName}`;
     Utils.$("#loading-hashtag").textContent = couple.hashtag;
   },
 
@@ -67,7 +68,8 @@ const ContentBuilder = {
       Utils.$("#profile-groom-order").textContent = groom.childOrder || "";
       Utils.$("#profile-groom-parents").textContent = groom.parents || "";
       if (groom.photo) {
-        Utils.$("#groom-avatar").style.backgroundImage = `url("${groom.photo}")`;
+        Utils.$("#groom-avatar").style.backgroundImage =
+          `url("${groom.photo}")`;
         Utils.$("#groom-avatar").classList.add("has-photo");
       }
     }
@@ -76,7 +78,8 @@ const ContentBuilder = {
       Utils.$("#profile-bride-order").textContent = bride.childOrder || "";
       Utils.$("#profile-bride-parents").textContent = bride.parents || "";
       if (bride.photo) {
-        Utils.$("#bride-avatar").style.backgroundImage = `url("${bride.photo}")`;
+        Utils.$("#bride-avatar").style.backgroundImage =
+          `url("${bride.photo}")`;
         Utils.$("#bride-avatar").classList.add("has-photo");
       }
     }
@@ -104,7 +107,7 @@ const ContentBuilder = {
           <span class="timeline-year">${item.year}</span>
           <h3>${item.title}</h3>
           <p>${item.text}</p>
-        </div>`
+        </div>`,
       )
       .join("");
   },
@@ -121,7 +124,7 @@ const ContentBuilder = {
             <p class="account-name">a.n. ${acc.accountName}</p>
           </div>
           <button class="copy-btn" data-copy="${acc.accountNumber.replace(/\s/g, "")}" data-index="${idx}">Salin</button>
-        </div>`
+        </div>`,
       )
       .join("");
 

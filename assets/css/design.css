@@ -11,6 +11,7 @@
   --color-sage-dark: #4a1622;
   --color-sage-soft: #f3e6d5;
   --color-gold: #b08a4a;
+  --color-gold-deep: #85632a; /* emas tua: khusus teks kecil agar kontras terbaca (~4,6:1) */
   --color-gold-light: #ddc38b;
   --color-brown: #5a4638;
   --color-brown-light: #a98a73;
@@ -550,7 +551,6 @@ body::before {
   border: none;
   box-shadow: 0 0 0 7px var(--color-card), 0 0 0 8.5px var(--color-maroon);
 }
-.placeholder-icon-small { width: 34px; height: 34px; opacity: .5; }
 
 .profile-frame h3 { color: var(--color-maroon); }
 .profile-order { color: var(--color-maroon); opacity: .85; }
@@ -773,8 +773,7 @@ body::before {
 .gallery-section .eyebrow,
 .gallery-frame .profile-role-title,
 .gallery-frame .ayat-divider,
-.gallery-grid,
-.gallery-add-placeholder {
+.gallery-grid {
   position: relative;
   z-index: 2;
 }
@@ -825,7 +824,6 @@ body::before {
   text-align: center;
   color: var(--color-maroon);
 }
-.gallery-add-placeholder { color: var(--color-maroon); opacity: .6; }
 
 /* Timeline */
 .timeline { margin-top: 2rem; }
@@ -850,7 +848,7 @@ body::before {
   object-fit: contain;
   transform: none;
 }
-.timeline-year { color: var(--color-gold); font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; }
+.timeline-year { color: var(--color-gold-deep); font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; }
 .timeline-item h3 { font-size: 1.55rem; margin: .25rem 0 .35rem; }
 .timeline-item p { font-size: .88rem; line-height: 1.75; }
 
@@ -976,7 +974,7 @@ body::before {
   border-radius: 24px;
   text-align: left;
 }
-.form-group label { color: var(--color-brown); font-size: .78rem; letter-spacing: .03em; }
+.form-group label { color: var(--color-maroon); font-size: .78rem; letter-spacing: .03em; }
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -1024,7 +1022,8 @@ body::before {
   overflow: hidden;
 }
 .closing-path { z-index: 2; }
-.closing-section .section-title { max-width: 340px; margin-inline: auto; }
+.closing-section .section-title { max-width: 340px; margin-inline: auto; color: var(--color-maroon); }
+.closing-section .eyebrow { color: var(--color-maroon); }
 .closing-message { background: rgba(251,248,241,.96); backdrop-filter: blur(18px); }
 .closing-message-text { color: var(--color-brown); }
 
@@ -1345,4 +1344,160 @@ body::before {
   .love-story-section .timeline-item {
     padding-left: 52px;
   }
+}
+
+/* =========================================================
+   GALERI — foto besar + strip bergerak (override blok kolase lama)
+   Frame tipis: matte gading 4px + garis emas halus.
+   ========================================================= */
+.gallery-stage {
+  position: relative;
+  z-index: 2;
+  margin: 1.5rem auto .6rem;
+  /* Tinggi TETAP: jangan diubah mengikuti rasio foto & jangan dianimasikan,
+     karena itu menggeser seluruh halaman di bawah galeri. */
+  height: min(430px, 112vw);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-in;
+}
+/* Isi buram di belakang foto: mengisi ruang sisa kalau foto landscape
+   lebih pendek dari area (foto tetap utuh, tidak terpotong). */
+.gallery-backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--color-cream-soft);
+  box-shadow: inset 0 0 0 1px rgba(176,138,74,.35);
+}
+.gallery-backdrop span {
+  position: absolute;
+  inset: -30px;
+  background-position: center;
+  background-size: cover;
+  filter: blur(16px) saturate(1.1);
+  opacity: .8;
+  transition: opacity .28s ease;
+}
+.gallery-backdrop span.is-fading { opacity: 0; }
+.gallery-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(255,253,248,.10), rgba(255,253,248,.22));
+}
+
+.gallery-main {
+  position: relative;
+  z-index: 1;
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  background: #fffdf8;
+  border: 4px solid #fffdf8;
+  outline: 1px solid var(--color-gold);
+  outline-offset: 0;
+  border-radius: 2px;
+  box-shadow: 0 12px 26px rgba(58,48,40,.22);
+  transition: opacity .28s ease, transform .28s ease;
+}
+.gallery-main.is-fading { opacity: 0; transform: scale(.985); }
+.gallery-main-caption {
+  position: relative;
+  z-index: 2;
+  min-height: 1.3em;
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: .8rem;
+  color: var(--color-maroon);
+}
+
+.gallery-marquee {
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  margin: 0 -.6rem;
+  padding: 6px 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.gallery-track {
+  display: flex;
+  gap: 10px;
+  width: max-content;
+  animation: gallery-scroll var(--marquee-duration, 50s) linear infinite;
+}
+.gallery-marquee.is-paused .gallery-track { animation-play-state: paused; }
+@keyframes gallery-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-50% - 5px)); }
+}
+.gallery-thumb {
+  flex: 0 0 auto;
+  height: 112px;
+  padding: 0;
+  background: #fffdf8;
+  border: 2px solid #fffdf8;
+  outline: 1px solid rgba(185,154,78,.55);
+  border-radius: 2px;
+  box-shadow: 0 5px 12px rgba(58,48,40,.18);
+  cursor: pointer;
+  opacity: .8;
+  transition: opacity .25s, transform .25s, outline-color .25s;
+}
+.gallery-thumb img {
+  display: block;
+  height: 100%;
+  width: auto;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+.gallery-thumb.active {
+  opacity: 1;
+  outline: 2px solid var(--color-gold);
+  transform: translateY(-3px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .gallery-track { animation: none; }
+  .gallery-marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+  .gallery-main,
+  .gallery-backdrop span { transition: none; }
+}
+
+/* Foto profil — potret 2:3 utuh (baju adat & mahkota tidak terpotong) */
+.profile-avatar {
+  width: 156px;
+  height: 234px;
+  border-radius: 78px 78px 10px 10px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 0 0 4px var(--color-card), 0 0 0 5px var(--color-gold), 0 12px 24px rgba(58,48,40,.2);
+}
+.profile-avatar.has-photo { border: none; }
+.lightbox-image {
+  border: 4px solid #fffdf8;
+  outline: 1px solid var(--color-gold);
+  border-radius: 2px;
+}
+
+/* ---------- RSVP: kolom jebakan anti-bot & penghitung huruf ---------- */
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+.char-counter {
+  margin: .25rem .15rem 0;
+  text-align: right;
+  font-size: .7rem;
+  color: var(--color-ink-soft, #6e5f52);
 }

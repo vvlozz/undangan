@@ -69,16 +69,50 @@ const Character = {
 
     const sprites = WEDDING_CONFIG.characters.groom;
 
+    // Saat berhenti, karakter TETAP memakai sprite arah terakhirnya (bukan
+    // pindah ke sprite "idle" menghadap depan). Sebelumnya gambar berganti
+    // mendadak di frame berhenti dan sosok kiri/kanan tiba-tiba melebar.
+    // (groom_down identik dengan groom_idle, jadi menghadap bawah tak berubah.)
     if (facing !== this.groom.facing) {
       this.groom.facing = facing;
-      this._setSprite(this.groom.spriteEl, moving ? sprites[facing] || sprites.idle : sprites.idle);
+      this._setSprite(this.groom.spriteEl, sprites[facing] || sprites.idle);
     }
 
     if (moving !== this.groom.moving) {
       this.groom.moving = moving;
-      this.groom.spriteEl.classList.toggle("walking", moving);
-      this._setSprite(this.groom.spriteEl, moving ? sprites[this.groom.facing] || sprites.idle : sprites.idle);
+      if (moving) this._startWalk(this.groom.spriteEl);
+      else this._endWalk(this.groom.spriteEl);
+      this._setSprite(this.groom.spriteEl, sprites[this.groom.facing] || sprites.idle);
     }
+  },
+
+  _startWalk(spriteEl) {
+    clearTimeout(this._settleTimer);
+    spriteEl.style.transition = "";
+    spriteEl.style.transform = "";
+    spriteEl.classList.add("walking");
+  },
+
+  /**
+   * Hentikan animasi jalan dengan halus. Kalau class "walking" langsung
+   * dicabut, sprite yang sedang terangkat (sampai 5px) melompat balik ke 0
+   * dalam satu frame. Di sini posisi saat itu "dibekukan" dulu, lalu
+   * diturunkan pelan ke 0.
+   */
+  _endWalk(spriteEl) {
+    clearTimeout(this._settleTimer);
+    const current = getComputedStyle(spriteEl).transform;
+    spriteEl.classList.remove("walking");
+    if (!current || current === "none") return;
+    spriteEl.style.transition = "none";
+    spriteEl.style.transform = current;
+    void spriteEl.offsetWidth; // paksa browser mencatat posisi beku tadi
+    spriteEl.style.transition = "transform 140ms ease-out";
+    spriteEl.style.transform = "translateY(0)";
+    this._settleTimer = setTimeout(() => {
+      spriteEl.style.transition = "";
+      spriteEl.style.transform = "";
+    }, 190);
   },
 
   setBridePosition(x, y) {

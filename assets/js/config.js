@@ -14,20 +14,22 @@ const WEDDING_CONFIG = {
   couple: {
     groomName: "Hanif",
     groomFullName: "Yusran Hanif",
-    brideName: "Nissa",
+    brideName: "Nisa",
     brideFullName: "Khoirunnisa",
-    hashtag: "#HANIFoundNissa",
+    hashtag: "#HANIFoundNisa",
   },
 
   // -------------------- TANGGAL & WAKTU ACARA --------------------
   event: {
-    // Format ISO agar mudah dibaca countdown JS
-    isoDate: "2026-11-15T10:00:00",
-    dateLabel: "Sabtu, 15 November 2026",
-    akadTime: "08.00 WIB - Selesai",
-    resepsiTime: "11.00 WIB - 14.00 WIB",
-    location: "Gedung Kebon Gede (InshaAllah)",
-    address: "Jl. blabla",
+    // Format ISO + offset +07:00 (WIB) agar countdown selalu menghitung ke jam WIB,
+    // berapa pun zona waktu perangkat tamu.
+    isoDate: "2026-11-15T07:00:00+07:00",
+    dateLabel: "Minggu, 15 November 2026",
+    akadTime: "07.00 WIB - 09.00 WIB",
+    resepsiTime: "10.00 WIB - Selesai",
+    location: "KEBON GEDE VENUE",
+    address:
+      "Jl. Sultan Moh. Mansyur No.687, 35 Ilir, Kec. Ilir Bar. II, Kota Palembang",
     mapsUrl: "https://maps.app.goo.gl/zMHQMNzdFqR3dWuUA",
     // Query untuk peta tertanam (embed) di section "Peta Lokasi".
     // Default: dibuat otomatis dari location + address di atas.
@@ -52,16 +54,16 @@ const WEDDING_CONFIG = {
   coupleProfile: {
     groom: {
       fullName: "Yusran Hanif",
-      childOrder: "Putra pertama dari",
+      childOrder: "Anak pertama dari",
       parents: "Bapak Sufri & Ibu Yuliatin",
       instagram: "",
       photo: "assets/images/groom.jpeg",
       photoPosition: "center",
     },
     bride: {
-      fullName: "Khoirunnisa",
-      childOrder: "Putri Ketiga dari",
-      parents: "Bapak Abdur Rozak & Ibu Hartika (Almh)",
+      fullName: "Nyayu Khoirunnisa, S.Tr.Par",
+      childOrder: "Anak keempat dari",
+      parents: "Bapak Kgs. Abdur Rozak & Ibu Nyayu Hartika (Almh)",
       instagram: "",
       photo: "assets/images/bride.jpeg",
     },
@@ -70,54 +72,100 @@ const WEDDING_CONFIG = {
   // -------------------- LOVE STORY --------------------
   loveStory: [
     {
-      year: "2019",
+      year: "September-2017",
       title: "Pertemuan Pertama",
-      text: "Dua orang asing dipertemukan dalam satu kelas yang sama, tanpa tahu bahwa itu adalah awal dari segalanya.",
+      text: "Sebuah pertemuan sederhana di sebuah warung menjadi awal dari kisah cinta yang membawa kami menuju selamanya. Seiring berjalannya waktu, rasa nyaman tumbuh menjadi cinta, hingga kami memutuskan untuk berjalan bersama dan saling menemani dalam setiap cerita.",
     },
     {
-      year: "2021",
-      title: "Menjadi Sepasang Kekasih",
-      text: "Setelah melewati banyak percakapan panjang dan momen sederhana, kami memutuskan untuk berjalan bersama.",
+      year: "November-2017",
+      title: "Tentang Bertahan",
+      text: "Terlalu panjang jika harus diceritakan dari awal... Karena cinta kami bukan tentang bagaimana semuanya dimulai, melainkan tentang bagaimana kami bertahan. Kami hanya dua insan biasa, yang ditakdirkan untuk saling menggenggam, melewati badai, menikmati pelangi, hingga sampai di titik ini.",
     },
     {
-      year: "2026",
-      title: "Lamaran",
-      text: "Di bawah langit senja, sebuah janji terucap untuk melanjutkan perjalanan ini seumur hidup.",
+      year: "April-2026",
+      title: "Meminta Restu",
+      text: 'Ribuan tangis, jutaan tawa, menjadi saksi bagaimana kata <strong>"yakin"</strong> terus kami ucapkan untuk menguatkan hati yang sempat rapuh. Bukan sekadar janji yang terucap, tapi langkah yang terus bergerak. Bukan hanya kata yang indah, namun pengorbanan yang nyata. Dengan niat yang tulus, sang pria datang menemui keluarga wanita untuk menyampaikan keseriusan dan memohon restu demi melangkah ke jenjang pernikahan.',
     },
     {
-      year: "2026",
+      year: "Mei-2026",
+      title: "Kesepakatan Hari Bahagia",
+      text: "Hingga pada suatu hari yang penuh haru, kami mempertemukan kedua keluarga untuk bersilaturahmi, menyatukan niat, menyatukan doa-doa dalam satu restu, dan menetapkan tanggal pernikahan sebagai awal perjalanan baru kami.",
+    },
+    {
+      year: "November-2026",
       title: "Hari Bahagia",
       text: "Dan kini, kami mengundang kalian untuk menjadi saksi dimulainya babak baru kehidupan kami.",
     },
   ],
 
   // -------------------- GALERI FOTO --------------------
-  // Caption ditulis seperti kutipan singkat (muncul di border foto,
-  // gaya polaroid) — ganti sesuai momen di foto masing-masing.
+  // src = foto besar (lightbox & foto utama), thumb = versi kecil untuk strip
+  // yang bergerak. Caption tampil di bawah foto besar — ganti sesuka hati.
+  // Urutan di sini = urutan di strip.
   gallery: [
-    { src: "assets/images/gallery1.jpg", caption: "Awal dari segalanya" },
-    { src: "assets/images/gallery2.jpg", caption: "Perjalanan kami" },
-    { src: "assets/images/gallery3.jpg", caption: "Sesi prewedding" },
-    { src: "assets/images/gallery4.jpg", caption: "Hari lamaran" },
-    { src: "assets/images/gallery5.jpg", caption: "Bersama keluarga" },
-    { src: "assets/images/gallery6.jpg", caption: "Menuju hari bahagia" },
-    { src: "assets/images/gallery7.jpg", caption: "Dalam tawa & cerita" },
-    { src: "assets/images/gallery8.jpg", caption: "Setiap detik berharga" },
-    { src: "assets/images/gallery9.jpg", caption: "Cinta yang bertumbuh" },
-    { src: "assets/images/gallery10.jpg", caption: "Selamanya berdua" },
+    {
+      src: "assets/images/gallery/g01.jpg",
+      thumb: "assets/images/gallery/g01-thumb.jpg",
+      caption: "Momen 1",
+    },
+    {
+      src: "assets/images/gallery/g02.jpg",
+      thumb: "assets/images/gallery/g02-thumb.jpg",
+      caption: "Momen 2",
+    },
+    {
+      src: "assets/images/gallery/g03.jpg",
+      thumb: "assets/images/gallery/g03-thumb.jpg",
+      caption: "Momen 3",
+    },
+    {
+      src: "assets/images/gallery/g04.jpg",
+      thumb: "assets/images/gallery/g04-thumb.jpg",
+      caption: "Momen 4",
+    },
+    {
+      src: "assets/images/gallery/g05.jpg",
+      thumb: "assets/images/gallery/g05-thumb.jpg",
+      caption: "Momen 5",
+    },
+    {
+      src: "assets/images/gallery/g06.jpg",
+      thumb: "assets/images/gallery/g06-thumb.jpg",
+      caption: "Momen 6",
+    },
+    {
+      src: "assets/images/gallery/g07.jpg",
+      thumb: "assets/images/gallery/g07-thumb.jpg",
+      caption: "Momen 7",
+    },
+    {
+      src: "assets/images/gallery/g08.jpg",
+      thumb: "assets/images/gallery/g08-thumb.jpg",
+      caption: "Momen 8",
+    },
+    {
+      src: "assets/images/gallery/g09.jpg",
+      thumb: "assets/images/gallery/g09-thumb.jpg",
+      caption: "Momen 9",
+    },
+    {
+      src: "assets/images/gallery/g10.jpg",
+      thumb: "assets/images/gallery/g10-thumb.jpg",
+      caption: "Momen 10",
+    },
   ],
 
   // -------------------- GIFT / AMPLOP DIGITAL --------------------
   gift: [
     {
       bank: "Bank Central Asia",
-      accountNumber: "843-543-3444",
-      accountName: "Muhammad Syukron Akbar",
+      accountNumber: "857-307-9947",
+      accountName: "Yusran Hanif",
     },
     {
-      bank: "Bank Central Asia",
-      accountNumber: "843-543-3444",
-      accountName: "Muhammad Syukron Akbar",
+      bank: "Sea Bank",
+      accountNumber: "9019-7060-9890",
+      accountName: "Khoirunnisa",
     },
   ],
   qrImage: "assets/images/qr-placeholder.png",
@@ -198,6 +246,9 @@ const WEDDING_CONFIG = {
       "https://script.google.com/macros/s/AKfycby9FG3iJytnrAjoFh6svO4z5-tUZXkms9XOdTQHAkDSp5L3EhduaFBPGqcsw5noA1iS/exec",
     // Seberapa sering website mengecek ucapan baru dari Google Sheets (dalam
     // milidetik). Buku Tamu akan otomatis update tanpa perlu refresh halaman.
-    pollIntervalMs: 8000,
+    // 25 detik (bukan lebih cepat) agar kuota Google Apps Script tidak habis
+    // kalau banyak tamu membuka undangan bersamaan. Ucapan yang dikirim tamu
+    // itu sendiri tetap langsung tampil di layarnya.
+    pollIntervalMs: 25000,
   },
 };

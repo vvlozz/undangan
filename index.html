@@ -22,27 +22,38 @@
         if (e.persisted) window.scrollTo(0, 0);
       });
     </script>
-    <title>Nissa &amp; Hanif — Mohon Doa Restu</title>
+    <title>Nisa &amp; Hanif — Mohon Doa Restu</title>
     <meta
       name="description"
-      content="Pernikahan Nissa & Hanif"
+      content="Pernikahan Nisa &amp; Hanif"
       id="meta-description"
     />
 
-    <!-- Preview link (WhatsApp/Instagram/dll TIDAK menjalankan JavaScript,
-     jadi title/description/gambar di bawah ini WAJIB diedit manual di
-     sini setiap kali nama pengantin di config.js diganti — tidak
-     otomatis ikut berubah seperti bagian lain di situs) -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Nissa & Hanif — Mohon Doa Restu" />
-    <meta property="og:description" content="Pernikahan Nissa & Hanif" />
-    <meta property="og:image" content="assets/images/favicon.png" />
+    <!-- Jangan diindeks mesin pencari (ada nama, alamat, & rekening). Preview
+         link di WhatsApp/Instagram TIDAK terpengaruh oleh tag ini. -->
+    <meta name="robots" content="noindex, nofollow" />
 
-    <!-- Favicon (ikon kecil di tab browser) & ikon link preview — SENGAJA
-     file terpisah dari assets/images/logo.png (yang dipakai di layar
-     loading), supaya bisa diganti masing-masing secara independen.
-     Ganti assets/images/favicon.png untuk ubah ikon tab & preview link;
-     ganti assets/images/logo.png untuk ubah logo di layar loading. -->
+    <!-- Preview link (WhatsApp/Instagram/dll TIDAK menjalankan JavaScript, jadi
+         bagian ini WAJIB diedit manual kalau nama pengantin/domain berubah).
+         og:image HARUS memakai URL lengkap (https://...), bukan path relatif,
+         kalau tidak gambar tidak muncul di WhatsApp. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Nisa &amp; Hanif" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="https://hanifoundnisa.com/" />
+    <meta property="og:title" content="Nisa &amp; Hanif — Mohon Doa Restu" />
+    <meta property="og:description" content="Pernikahan Nisa &amp; Hanif" />
+    <meta
+      property="og:image"
+      content="https://hanifoundnisa.com/assets/images/og-preview.jpg"
+    />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="400" />
+    <meta property="og:image:height" content="400" />
+    <meta property="og:image:alt" content="Nisa &amp; Hanif" />
+    <meta name="twitter:card" content="summary" />
+
+    <!-- Favicon (ikon tab browser & ikon di layar utama HP) -->
     <link rel="icon" type="image/png" href="assets/images/favicon.png" />
     <link rel="apple-touch-icon" href="assets/images/favicon.png" />
 
@@ -62,8 +73,6 @@
     <link rel="stylesheet" href="assets/css/sections.css" />
     <link rel="stylesheet" href="assets/css/responsive.css" />
     <link rel="stylesheet" href="assets/css/design.css" />
-
-    <link rel="icon" href="assets/images/logo.png" />
   </head>
   <body>
     <!-- ======================================================
@@ -80,8 +89,8 @@
           alt="Stempel N&amp;H"
           class="loading-logo"
         />
-        <p class="loading-title" id="loading-title">Nissa &amp; Hanif</p>
-        <p class="loading-hashtag" id="loading-hashtag">#HANIFoundNissa</p>
+        <p class="loading-title" id="loading-title">Nisa &amp; Hanif</p>
+        <p class="loading-hashtag" id="loading-hashtag">#HANIFoundNisa</p>
         <p class="loading-caption" id="loading-caption">
           Menyiapkan undangan...
         </p>
@@ -127,12 +136,12 @@
               />
               <p class="eyebrow">The Wedding Of</p>
               <h1 class="hero-names">
-                <span id="bride-name-display">Nissa</span>
+                <span id="bride-name-display">Nisa</span>
                 <span class="hero-amp">&amp;</span>
                 <span id="groom-name-display">Hanif</span>
               </h1>
               <p class="hero-date" id="hero-date-display">
-                Sabtu, 22 Juni 2026
+                Minggu, 15 November 2026
               </p>
 
               <div class="invited-guest" id="invited-guest">
@@ -253,24 +262,18 @@
                   class="profile-portrait-orn profile-portrait-orn--left"
                   aria-hidden="true"
                 ></span>
-                <div class="profile-avatar" id="bride-avatar">
-                  <img
-                    src="assets/icons/camera.png"
-                    alt=""
-                    class="placeholder-icon-small"
-                  />
-                </div>
+                <div class="profile-avatar" id="bride-avatar"></div>
                 <span
                   class="profile-portrait-orn profile-portrait-orn--right"
                   aria-hidden="true"
                 ></span>
               </div>
-              <h3 id="profile-bride-name">Khoirunnisa</h3>
+              <h3 id="profile-bride-name">Nyayu Khoirunnisa, S.Tr.Par</h3>
               <p class="profile-order" id="profile-bride-order">
-                Putri kedua dari
+                Anak keempat dari
               </p>
               <p class="profile-parents" id="profile-bride-parents">
-                Bapak Muhammad Ridwan &amp; Ibu Dewi Lestari
+                Bapak Kgs. Abdur Rozak &amp; Ibu Nyayu Hartika (Almh)
               </p>
 
               <div class="profile-medallion-divider" aria-hidden="true"></div>
@@ -282,13 +285,7 @@
                   class="profile-portrait-orn profile-portrait-orn--left"
                   aria-hidden="true"
                 ></span>
-                <div class="profile-avatar" id="groom-avatar">
-                  <img
-                    src="assets/icons/camera.png"
-                    alt=""
-                    class="placeholder-icon-small"
-                  />
-                </div>
+                <div class="profile-avatar" id="groom-avatar"></div>
                 <span
                   class="profile-portrait-orn profile-portrait-orn--right"
                   aria-hidden="true"
@@ -296,10 +293,10 @@
               </div>
               <h3 id="profile-groom-name">Yusran Hanif</h3>
               <p class="profile-order" id="profile-groom-order">
-                Putra pertama dari
+                Anak pertama dari
               </p>
               <p class="profile-parents" id="profile-groom-parents">
-                Bapak Ahmad Yusuf &amp; Ibu Siti Aminah
+                Bapak Sufri &amp; Ibu Yuliatin
               </p>
             </div>
           </div>
@@ -342,8 +339,8 @@
                     class="detail-icon"
                   />
                   <h3>Akad Nikah</h3>
-                  <p id="detail-date-1">Sabtu, 22 Juni 2026</p>
-                  <p id="detail-time-1">08.00 WIB - Selesai</p>
+                  <p id="detail-date-1">Minggu, 15 November 2026</p>
+                  <p id="detail-time-1">07.00 WIB - 09.00 WIB</p>
                 </div>
 
                 <div class="detail-row-divider" aria-hidden="true"></div>
@@ -355,8 +352,8 @@
                     class="detail-icon"
                   />
                   <h3>Resepsi</h3>
-                  <p id="detail-date-2">Sabtu, 22 Juni 2026</p>
-                  <p id="detail-time-2">11.00 - 14.00 WIB</p>
+                  <p id="detail-date-2">Minggu, 15 November 2026</p>
+                  <p id="detail-time-2">10.00 WIB - Selesai</p>
                 </div>
 
                 <div class="detail-row-divider" aria-hidden="true"></div>
@@ -368,11 +365,14 @@
                     class="detail-icon"
                   />
                   <h3>Lokasi</h3>
-                  <p id="detail-location">Gedung Serbaguna Kasih Abadi</p>
-                  <p id="detail-address">Jl. Bahagia Selalu No. 22, Jakarta</p>
+                  <p id="detail-location">KEBON GEDE VENUE</p>
+                  <p id="detail-address">
+                    Jl. Sultan Moh. Mansyur No.687, 35 Ilir, Kec. Ilir Bar. II,
+                    Kota Palembang
+                  </p>
                   <a
                     id="detail-maps-link"
-                    href="#"
+                    href="https://maps.app.goo.gl/zMHQMNzdFqR3dWuUA"
                     target="_blank"
                     rel="noopener"
                     class="btn btn-outline btn-small"
@@ -470,16 +470,22 @@
               <h2 class="profile-role-title">Momen Bahagia</h2>
               <div class="ayat-divider"></div>
 
-              <div class="gallery-grid" id="gallery-grid">
-                <!-- diisi via JS dari config -->
-              </div>
-              <div class="gallery-add-placeholder">
+              <div class="gallery-stage" id="gallery-stage">
+                <div class="gallery-backdrop" aria-hidden="true">
+                  <span id="gallery-backdrop-img"></span>
+                </div>
                 <img
-                  src="assets/icons/camera.png"
-                  alt=""
-                  class="placeholder-icon-small"
+                  id="gallery-main"
+                  class="gallery-main"
+                  src="assets/images/gallery/g01.jpg"
+                  alt="Foto galeri"
                 />
-                <span></span>
+              </div>
+              <p class="gallery-main-caption" id="gallery-main-caption"></p>
+              <div class="gallery-marquee" id="gallery-marquee">
+                <div class="gallery-track" id="gallery-track">
+                  <!-- diisi via JS dari config -->
+                </div>
               </div>
             </div>
           </div>
@@ -557,7 +563,20 @@
                     id="rsvp-name"
                     name="name"
                     placeholder="Nama Anda"
+                    maxlength="60"
+                    autocomplete="name"
                     required
+                  />
+                </div>
+                <!-- Kolom jebakan anti-bot: tersembunyi untuk manusia, jangan dihapus -->
+                <div class="hp-field" aria-hidden="true">
+                  <label for="rsvp-website">Website</label>
+                  <input
+                    type="text"
+                    id="rsvp-website"
+                    name="website"
+                    tabindex="-1"
+                    autocomplete="off"
                   />
                 </div>
                 <div class="form-group">
@@ -583,8 +602,10 @@
                     id="rsvp-message"
                     name="message"
                     rows="3"
+                    maxlength="500"
                     placeholder="Tulis ucapan dan doa terbaik Anda..."
                   ></textarea>
+                  <p class="char-counter" id="rsvp-message-count">0/500</p>
                 </div>
                 <button type="submit" class="btn btn-primary ripple full-width">
                   Kirim Ucapan
@@ -797,7 +818,12 @@
         <button id="lightbox-close" class="lightbox-close">
           <img src="assets/icons/close.png" alt="Tutup" />
         </button>
-        <img id="lightbox-image" src="" alt="Galeri" class="lightbox-image" />
+        <img
+          id="lightbox-image"
+          src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+          alt="Galeri"
+          class="lightbox-image"
+        />
         <p id="lightbox-caption" class="lightbox-caption"></p>
       </div>
 
@@ -811,8 +837,8 @@
     <!-- ======================================================
      EXTERNAL LIBRARIES
 ====================================================== -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script src="assets/vendor/howler.min.js"></script>
 
     <!-- ======================================================
      APP MODULES (urutan penting)

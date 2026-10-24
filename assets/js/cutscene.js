@@ -35,7 +35,10 @@ const Cutscene = {
         Character.updateGroom(groom.x, groom.y, "up", true);
       },
       onComplete: () => {
-        Character.updateGroom(finalX, finalY, "up", false);
+        // Setelah bertemu, mempelai pria menghadap DEPAN (ke arah layar), sejajar
+        // dengan mempelai wanita. Sejak karakter berhenti memakai sprite arah
+        // terakhirnya, arah ini harus disebut eksplisit ("down" = tampak depan).
+        Character.updateGroom(finalX, finalY, "down", false);
         this._playMeetingSequence();
       },
     });

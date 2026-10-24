@@ -8,6 +8,7 @@
  */
 const GameStage = {
   SPEED: 2.5, // px per frame at 60fps; tuned for responsive navigation
+  VELOCITY_SMOOTH_MS: 60, // lama "ease" mulai/berhenti jalan (makin kecil makin responsif)
   POPUP_RADIUS: 230,
   CUTSCENE_RADIUS: 100,
 
@@ -21,6 +22,9 @@ const GameStage = {
   _moveHintDismissed: false,
   _layoutQueued: false,
   _resizeObserver: null,
+  _vel: { x: 0, y: 0 },
+  _cameraSettling: false,
+  _settleFrames: 0,
 
   init() {
     this.stage = Utils.$("#game-stage");
@@ -119,23 +123,37 @@ const GameStage = {
   },
 
   _updateMovement(dt) {
-    if (Cutscene.isPlaying || !Controls.enabled) return; // input dibekukan selama cutscene / animasi masuk
+    if (Cutscene.isPlaying || !Controls.enabled) {
+      this._vel.x = 0;
+      this._vel.y = 0;
+      return; // input dibekukan selama cutscene / animasi masuk
+    }
 
     const vector = Controls.getVector();
     const groom = Character.groom;
-    // Histeresis juga di sini: ambang START bergerak (0.08) lebih tinggi
-    // dari ambang BERHENTI (0.03). Tanpa ini, menahan joystick pelan di
-    // sekitar satu ambang tunggal (0.05) bisa bikin nilai magnitude
-    // naik-turun tipis tiap frame akibat noise kecil dari input —
-    // karakter jadi gonta-ganti sprite diam↔jalan tiap frame (kedip).
+    // Histeresis: ambang START bergerak (0.08) lebih tinggi dari ambang
+    // BERHENTI (0.03), supaya input yang bergoyang tipis di sekitar satu
+    // ambang tidak membuat karakter gonta-ganti diam<->jalan tiap frame.
     const magnitude = Math.max(Math.abs(vector.x), Math.abs(vector.y));
-    const moving = groom.moving ? magnitude > 0.03 : magnitude > 0.08;
+    const inputActive = groom.moving ? magnitude > 0.03 : magnitude > 0.08;
+
+    // Kecepatan dihaluskan (±60 ms) agar mulai & berhenti terasa mengalir,
+    // tidak langsung 0 saat jari dilepas dari joystick. Dibuat tak bergantung
+    // pada frame-rate lewat rumus eksponensial.
+    const k = 1 - Math.exp(-(dt * 16.67) / this.VELOCITY_SMOOTH_MS);
+    const targetX = inputActive ? vector.x : 0;
+    const targetY = inputActive ? vector.y : 0;
+    this._vel.x += (targetX - this._vel.x) * k;
+    this._vel.y += (targetY - this._vel.y) * k;
+
+    const speedNow = Math.max(Math.abs(this._vel.x), Math.abs(this._vel.y));
+    const moving = inputActive || speedNow > 0.05;
 
     if (moving) {
       if (!this._moveHintDismissed) this._dismissMoveHint();
 
-      const nextX = groom.x + vector.x * this.SPEED * dt;
-      const nextY = groom.y + vector.y * this.SPEED * dt;
+      const nextX = groom.x + this._vel.x * this.SPEED * dt;
+      const nextY = groom.y + this._vel.y * this.SPEED * dt;
 
       // Batas bawah TAMBAHAN: karakter tidak boleh melangkah lebih jauh
       // dari tepi bawah layar yang sedang terlihat saat ini — supaya
@@ -150,29 +168,26 @@ const GameStage = {
         Math.min(this.bounds.height - groom.height - 40, viewportFloor)
       );
 
+      // Arah hadap hanya diperbarui selama ada input nyata (bukan saat
+      // meluncur berhenti). Histeresis: sumbu dominan harus unggul > 0.1,
+      // dan kiri/kanan harus melewati 0.08, supaya tidak berkedip.
       let facing = groom.facing;
-      const absX = Math.abs(vector.x);
-      const absY = Math.abs(vector.y);
-      // Histeresis: arah hadap HANYA diganti kalau sumbu yang dominan
-      // cukup jelas bedanya (margin 0.1), dan untuk kiri/kanan harus
-      // melewati ambang 0.08 (bukan cuma beda tanda +/- tipis di sekitar
-      // nol). Ini mencegah karakter "berkedip" gonta-ganti sprite kiri↔
-      // kanan tiap frame kalau vector joystick goyang kecil saat ditahan
-      // ke arah horizontal — tanpa jarak aman ini, goyangan +0.02/-0.02
-      // saja cukup untuk membalik tanda dan memicu ganti sprite.
-      if (absY > absX + 0.1) {
-        facing = vector.y < 0 ? "up" : "down";
-      } else if (absX > absY + 0.1) {
-        if (vector.x < -0.08) facing = "left";
-        else if (vector.x > 0.08) facing = "right";
-        // vector.x di antara -0.08..0.08: pertahankan arah hadap sebelumnya
+      if (inputActive) {
+        const absX = Math.abs(vector.x);
+        const absY = Math.abs(vector.y);
+        if (absY > absX + 0.1) {
+          facing = vector.y < 0 ? "up" : "down";
+        } else if (absX > absY + 0.1) {
+          if (vector.x < -0.08) facing = "left";
+          else if (vector.x > 0.08) facing = "right";
+        }
       }
-      // absX & absY hampir sama (beda < 0.1, gerakan diagonal): pertahankan
-      // arah hadap sebelumnya juga, supaya tidak lompat-lompat antar sumbu
 
       if (Math.random() < 0.06 * dt) MusicPlayer.playStep();
       Character.updateGroom(groom.x, groom.y, facing, true);
     } else {
+      this._vel.x = 0;
+      this._vel.y = 0;
       Character.updateGroom(groom.x, groom.y, groom.facing, false);
     }
   },
@@ -191,9 +206,21 @@ const GameStage = {
     if (Popup.lastShownSection === "hero-invite") Popup.hide();
   },
 
-  /** Kamera mengikuti karakter secara halus (lerp) hanya saat bergerak */
+  /**
+   * Kamera mengikuti karakter secara halus (lerp). Setelah karakter berhenti,
+   * kamera tetap melanjutkan beberapa frame sampai benar-benar sampai target,
+   * jadi layar melambat dan berhenti mulus (tidak terhenti mendadak).
+   */
   _updateCamera() {
-    if (!Character.groom.moving || Cutscene.isPlaying || !Controls.enabled) return;
+    if (Cutscene.isPlaying || !Controls.enabled) return;
+
+    const moving = Character.groom.moving;
+    if (moving) {
+      this._cameraSettling = true;
+      this._settleFrames = 0;
+    } else if (!this._cameraSettling) {
+      return;
+    }
 
     const maxScroll = this.bounds.height - window.innerHeight;
     const targetScroll = Utils.clamp(
@@ -202,13 +229,16 @@ const GameStage = {
       Math.max(0, maxScroll)
     );
     const current = window.scrollY;
-    // Faster camera response keeps the character visually locked to the
-    // viewport instead of making the page feel like it is dragging behind.
     const next = current + (targetScroll - current) * 0.38;
 
     if (Math.abs(next - current) > 0.5) {
       window.scrollTo({ top: Math.round(next), left: 0, behavior: "auto" });
+    } else if (!moving) {
+      this._cameraSettling = false;
     }
+
+    // Pengaman: jangan pernah "menyelesaikan" lebih dari ~0,7 detik
+    if (!moving && ++this._settleFrames > 40) this._cameraSettling = false;
   },
 
   _checkSectionProximity() {

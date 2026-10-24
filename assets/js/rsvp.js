@@ -65,6 +65,13 @@ const RSVP = {
   _page: 0, // halaman aktif, 0-based
   _pageSize: 4,
 
+  // -------------------- batas & pengaman form --------------------
+  MAX_NAME: 60, // harus sama dengan maxlength di index.html & BATAS.NAMA di Apps Script
+  MAX_MESSAGE: 500, // idem (BATAS.UCAPAN)
+  COOLDOWN_MS: 10000, // jeda minimal antar kiriman dari satu perangkat
+  _lastSubmitAt: 0,
+  _submitting: false,
+
   init() {
     if (this._initialized) return; // jaga-jaga supaya tidak dobel init (dobel interval/listener)
     this._initialized = true;
@@ -85,6 +92,15 @@ const RSVP = {
       this._handleSubmit(form);
     });
 
+    // penghitung huruf ucapan (0/500)
+    const msgEl = Utils.$("#rsvp-message");
+    const countEl = Utils.$("#rsvp-message-count");
+    const updateCount = () => {
+      if (countEl && msgEl) countEl.textContent = `${msgEl.value.length}/${this.MAX_MESSAGE}`;
+    };
+    if (msgEl) msgEl.addEventListener("input", updateCount);
+    form.addEventListener("reset", () => setTimeout(updateCount, 0));
+
     this._loadInitial();
     this._startPolling();
   },
@@ -92,15 +108,35 @@ const RSVP = {
   // -------------------- SUBMIT (tamu mengisi form) --------------------
 
   async _handleSubmit(form) {
-    const name = Utils.$("#rsvp-name").value.trim();
+    if (this._submitting) return; // cegah klik ganda saat masih mengirim
+
+    // slice = pengaman kalau maxlength di HTML dilewati
+    const name = Utils.$("#rsvp-name").value.trim().slice(0, this.MAX_NAME);
     const guest = Utils.$("#rsvp-guest").value;
     const attend = Utils.$("#rsvp-attend").value;
-    const message = Utils.$("#rsvp-message").value.trim();
+    const message = Utils.$("#rsvp-message").value.trim().slice(0, this.MAX_MESSAGE);
+    const honeypot = Utils.$("#rsvp-website");
 
     if (!name) {
       Utils.toast("Mohon isi nama terlebih dahulu.");
       return;
     }
+
+    // Kolom jebakan terisi = bot. Pura-pura sukses, tidak dikirim ke mana pun.
+    if (honeypot && honeypot.value) {
+      Utils.toast(`Terima kasih, ${name}! Ucapanmu telah terkirim 💌`);
+      form.reset();
+      return;
+    }
+
+    // Jeda antar kiriman supaya tidak bisa ditekan berulang kali
+    const sinceLast = Date.now() - this._lastSubmitAt;
+    if (this._lastSubmitAt && sinceLast < this.COOLDOWN_MS) {
+      const wait = Math.ceil((this.COOLDOWN_MS - sinceLast) / 1000);
+      Utils.toast(`Mohon tunggu ${wait} detik sebelum mengirim lagi.`);
+      return;
+    }
+    this._lastSubmitAt = Date.now();
 
     const attendLabel = { hadir: "Akan Hadir", "tidak-hadir": "Tidak Bisa Hadir", ragu: "Masih Ragu" }[attend];
     const normalized = { id: `local-${Date.now()}`, name, guestCount: guest, attendLabel, message };
@@ -127,6 +163,7 @@ const RSVP = {
       return;
     }
 
+    this._submitting = true;
     try {
       await fetch(endpoint, {
         method: "POST",
@@ -136,12 +173,15 @@ const RSVP = {
           jumlahTamu: guest,
           kehadiran: attendLabel,
           ucapan: message || "(tidak ada ucapan)",
+          website: "", // kolom jebakan anti-bot (selalu kosong dari form asli)
         }),
       });
       Utils.toast(`Terima kasih, ${name}! Ucapanmu telah terkirim 💌`);
     } catch (err) {
       Utils.toast(`Terima kasih, ${name}! (tersimpan di layar ini, tapi gagal terkirim — cek koneksi internet)`);
       console.error("[RSVP] Error saat mengirim ke Google Sheets:", err);
+    } finally {
+      this._submitting = false;
     }
 
     MusicPlayer.playClick();

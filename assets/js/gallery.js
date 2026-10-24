@@ -1,34 +1,110 @@
 /**
  * ============================================================
- *  GALLERY.JS — Grid Galeri & Lightbox
+ *  GALLERY.JS — Foto besar + strip thumbnail bergerak + Lightbox
  * ============================================================
+ *  - Strip thumbnail berjalan otomatis (marquee tanpa putus).
+ *  - Foto besar di atas strip berganti otomatis & saat thumbnail diketuk.
+ *  - Ketuk foto besar → lightbox layar penuh.
+ *  Rasio asli tiap foto dipertahankan (landscape tetap landscape).
  */
 const Gallery = {
+  index: 0,
+  timer: null,
+  AUTO_MS: 4500,
+
   init() {
-    this._renderGrid();
+    this.items = WEDDING_CONFIG.gallery || [];
+    if (!this.items.length) return;
+    this.main = Utils.$("#gallery-main");
+    this.backdrop = Utils.$("#gallery-backdrop-img");
+    this.caption = Utils.$("#gallery-main-caption");
+    this._renderStrip();
+    this._show(0, false);
+    this._bindMain();
     this._bindLightbox();
+    this._startAuto();
   },
 
-  _renderGrid() {
-    const grid = Utils.$("#gallery-grid");
-    grid.innerHTML = WEDDING_CONFIG.gallery
-      .map(
-        (item, idx) => `
-        <div class="gallery-item" data-index="${idx}">
-          <div class="gallery-photo">
-            <img src="${item.src}" alt="${item.caption}" loading="lazy" />
-          </div>
-          <span class="gallery-caption">${item.caption}</span>
-        </div>`
-      )
-      .join("");
+  _renderStrip() {
+    const track = Utils.$("#gallery-track");
+    const html = (set) =>
+      this.items
+        .map(
+          (item, idx) => `
+        <button type="button" class="gallery-thumb" data-index="${idx}"
+          ${set ? 'aria-hidden="true" tabindex="-1"' : ""}
+          aria-label="${item.caption}">
+          <img src="${item.thumb || item.src}" alt="${set ? "" : item.caption}" draggable="false" />
+        </button>`
+        )
+        .join("");
+    // Dua set berurutan → animasi -50% terlihat berputar tanpa putus
+    track.innerHTML = html(0) + html(1);
+    track.style.setProperty("--marquee-duration", `${this.items.length * 5}s`);
 
-    Utils.$all(".gallery-item", grid).forEach((el) => {
-      el.addEventListener("click", () => {
-        const idx = Number(el.dataset.index);
-        this._openLightbox(idx);
-        MusicPlayer.playClick();
-      });
+    track.addEventListener("click", (e) => {
+      const btn = e.target.closest(".gallery-thumb");
+      if (!btn) return;
+      this._show(Number(btn.dataset.index), true);
+      this._startAuto();
+      MusicPlayer.playClick();
+    });
+
+    // Jeda gerakan saat disentuh / di-hover agar mudah mengetuk
+    const marquee = Utils.$("#gallery-marquee");
+    const pause = () => marquee.classList.add("is-paused");
+    const resume = () => marquee.classList.remove("is-paused");
+    marquee.addEventListener("mouseenter", pause);
+    marquee.addEventListener("mouseleave", resume);
+    marquee.addEventListener("touchstart", pause, { passive: true });
+    marquee.addEventListener("touchend", () => setTimeout(resume, 1200), { passive: true });
+    marquee.addEventListener("touchcancel", resume, { passive: true });
+  },
+
+  _show(i, animate) {
+    const n = this.items.length;
+    this.index = ((i % n) + n) % n;
+    const item = this.items[this.index];
+    const apply = () => {
+      // Tinggi area foto SENGAJA dibuat tetap (lihat .gallery-stage di CSS).
+      // Kalau tingginya mengikuti rasio foto, seluruh halaman di bawah galeri
+      // ikut bergeser tiap foto potret <-> landscape berganti. Foto landscape
+      // cukup ditaruh di tengah; sisa ruangnya diisi salinan buram fotonya.
+      this.backdrop.style.backgroundImage = `url("${item.thumb || item.src}")`;
+      this.main.src = item.src;
+      this.main.alt = item.caption;
+      this.caption.textContent = item.caption;
+      this.main.classList.remove("is-fading");
+      this.backdrop.classList.remove("is-fading");
+    };
+    Utils.$all(".gallery-thumb").forEach((el) =>
+      el.classList.toggle("active", Number(el.dataset.index) === this.index)
+    );
+    if (!animate) return apply();
+    this.main.classList.add("is-fading");
+    this.backdrop.classList.add("is-fading");
+    // Muat dulu foto berikutnya agar pergantian mulus
+    const pre = new Image();
+    pre.onload = pre.onerror = () => setTimeout(apply, 220);
+    pre.src = item.src;
+    // pra-muat foto sesudahnya
+    const next = this.items[(this.index + 1) % n];
+    new Image().src = next.src;
+  },
+
+  _startAuto() {
+    clearInterval(this.timer);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    this.timer = setInterval(() => {
+      if (Utils.$("#lightbox").classList.contains("open")) return;
+      this._show(this.index + 1, true);
+    }, this.AUTO_MS);
+  },
+
+  _bindMain() {
+    Utils.$("#gallery-stage").addEventListener("click", () => {
+      this._openLightbox(this.index);
+      MusicPlayer.playClick();
     });
   },
 
@@ -44,7 +120,7 @@ const Gallery = {
   },
 
   _openLightbox(index) {
-    const item = WEDDING_CONFIG.gallery[index];
+    const item = this.items[index];
     Utils.$("#lightbox-image").src = item.src;
     Utils.$("#lightbox-caption").textContent = item.caption;
     Utils.$("#lightbox").classList.add("open");
