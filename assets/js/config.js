@@ -78,7 +78,7 @@ const WEDDING_CONFIG = {
     },
     {
       year: "November-2017",
-      title: "Tentang Bertahan",
+      title: "Memulai Sebuah Hubungan",
       text: "Terlalu panjang jika harus diceritakan dari awal... Karena cinta kami bukan tentang bagaimana semuanya dimulai, melainkan tentang bagaimana kami bertahan. Kami hanya dua insan biasa, yang ditakdirkan untuk saling menggenggam, melewati badai, menikmati pelangi, hingga sampai di titik ini.",
     },
     {
