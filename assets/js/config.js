@@ -27,7 +27,7 @@ const WEDDING_CONFIG = {
     dateLabel: "Minggu, 15 November 2026",
     akadTime: "07.00 WIB - 09.00 WIB",
     resepsiTime: "10.00 WIB - Selesai",
-    location: "KEBON GEDE VENUE",
+    location: "KEBON GEDE VENUE (ANGGREK)",
     address:
       "Jl. Sultan Moh. Mansyur No.687, 35 Ilir, Kec. Ilir Bar. II, Kota Palembang",
     mapsUrl: "https://maps.app.goo.gl/zMHQMNzdFqR3dWuUA",
