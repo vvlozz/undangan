@@ -1360,8 +1360,35 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: zoom-in;
+  cursor: grab;
+  overflow: hidden;
+  touch-action: none; /* geser foto ditangani gallery.js */
+  user-select: none;
+  -webkit-user-select: none;
 }
+.gallery-stage.is-dragging { cursor: grabbing; }
+.gallery-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  width: 34px;
+  height: 34px;
+  margin-top: -17px;
+  padding: 0 0 3px;
+  border: 1px solid var(--color-gold);
+  border-radius: 50%;
+  background: rgba(255,253,248,.88);
+  color: var(--color-maroon);
+  font-size: 1.5rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(58,48,40,.25);
+}
+.gallery-nav--prev { left: 8px; }
+.gallery-nav--next { right: 8px; }
 /* Isi buram di belakang foto: mengisi ruang sisa kalau foto landscape
    lebih pendek dari area (foto tetap utuh, tidak terpotong). */
 .gallery-backdrop {
@@ -1406,16 +1433,9 @@ body::before {
   transition: opacity .28s ease, transform .28s ease;
 }
 .gallery-main.is-fading { opacity: 0; transform: scale(.985); }
-.gallery-main-caption {
-  position: relative;
-  z-index: 2;
-  min-height: 1.3em;
-  margin: 0 0 1rem;
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: .8rem;
-  color: var(--color-maroon);
-}
+.gallery-main.is-dragging { transition: none; }
+.gallery-main.is-sliding { transition: transform .22s ease, opacity .22s ease; }
+
 
 .gallery-marquee {
   position: relative;
@@ -1533,4 +1553,44 @@ body::before {
   text-align: right;
   font-size: .7rem;
   color: var(--color-ink-soft, #6e5f52);
+}
+
+/* Lightbox: panah & geser */
+.lightbox { touch-action: none; }
+.lightbox .gallery-nav { background: rgba(30,22,16,.6); color: #fff; border-color: rgba(255,255,255,.7); z-index: 5; }
+.lightbox-image { user-select: none; -webkit-user-select: none; }
+.lightbox.no-nav .gallery-nav { display: none; }
+
+/* =========================================================
+   STRIP THUMBNAIL — bergeser mengikuti foto besar,
+   foto yang tampil selalu di tengah, di dalam bingkai.
+   (menimpa animasi marquee lama di atas)
+   ========================================================= */
+.gallery-marquee { padding: 14px 0; overflow: hidden !important; }
+.gallery-track {
+  position: relative;
+  -webkit-animation: none !important;
+  animation: none !important;
+  transition: transform .45s cubic-bezier(.3,.7,.3,1);
+}
+.gallery-thumb { opacity: .55; transform: none; }
+.gallery-thumb img { aspect-ratio: 2 / 3; }
+.gallery-thumb.active {
+  opacity: 1;
+  transform: none;
+  outline: 1px solid rgba(185,154,78,.55);
+}
+.gallery-frame-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 4;
+  transform: translate(-50%, -50%);
+  border: 2px solid var(--color-gold);
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px rgba(255,253,248,.9), 0 6px 16px rgba(58,48,40,.3);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gallery-track { transition: none; }
 }

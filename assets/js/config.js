@@ -100,60 +100,75 @@ const WEDDING_CONFIG = {
 
   // -------------------- GALERI FOTO --------------------
   // src = foto besar (lightbox & foto utama), thumb = versi kecil untuk strip
-  // yang bergerak. Caption tampil di bawah foto besar — ganti sesuka hati.
+  // yang bergerak. Tanpa caption.
   // Urutan di sini = urutan di strip.
   gallery: [
     {
+      src: "assets/images/gallery/g12.jpg",
+      thumb: "assets/images/gallery/g12-thumb.jpg",
+    },
+    {
+      src: "assets/images/gallery/g13.jpg",
+      thumb: "assets/images/gallery/g13-thumb.jpg",
+    },
+    {
+      src: "assets/images/gallery/g14.jpg",
+      thumb: "assets/images/gallery/g14-thumb.jpg",
+    },
+    {
+      src: "assets/images/gallery/g15.jpg",
+      thumb: "assets/images/gallery/g15-thumb.jpg",
+    },
+    {
+      src: "assets/images/gallery/g16.jpg",
+      thumb: "assets/images/gallery/g16-thumb.jpg",
+    },
+    {
       src: "assets/images/gallery/g01.jpg",
       thumb: "assets/images/gallery/g01-thumb.jpg",
-      caption: "Momen 1",
     },
     {
       src: "assets/images/gallery/g02.jpg",
       thumb: "assets/images/gallery/g02-thumb.jpg",
-      caption: "Momen 2",
     },
     {
       src: "assets/images/gallery/g03.jpg",
       thumb: "assets/images/gallery/g03-thumb.jpg",
-      caption: "Momen 3",
     },
     {
       src: "assets/images/gallery/g04.jpg",
       thumb: "assets/images/gallery/g04-thumb.jpg",
-      caption: "Momen 4",
     },
     {
       src: "assets/images/gallery/g05.jpg",
       thumb: "assets/images/gallery/g05-thumb.jpg",
-      caption: "Momen 5",
     },
     {
       src: "assets/images/gallery/g06.jpg",
       thumb: "assets/images/gallery/g06-thumb.jpg",
-      caption: "Momen 6",
     },
     {
       src: "assets/images/gallery/g07.jpg",
       thumb: "assets/images/gallery/g07-thumb.jpg",
-      caption: "Momen 7",
     },
     {
       src: "assets/images/gallery/g08.jpg",
       thumb: "assets/images/gallery/g08-thumb.jpg",
-      caption: "Momen 8",
     },
     {
       src: "assets/images/gallery/g09.jpg",
       thumb: "assets/images/gallery/g09-thumb.jpg",
-      caption: "Momen 9",
     },
     {
       src: "assets/images/gallery/g10.jpg",
       thumb: "assets/images/gallery/g10-thumb.jpg",
-      caption: "Momen 10",
+    },
+    {
+      src: "assets/images/gallery/g11.jpg",
+      thumb: "assets/images/gallery/g11-thumb.jpg",
     },
   ],
+
 
   // -------------------- GIFT / AMPLOP DIGITAL --------------------
   gift: [

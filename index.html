@@ -477,11 +477,13 @@
                 <img
                   id="gallery-main"
                   class="gallery-main"
-                  src="assets/images/gallery/g01.jpg"
+                  src="assets/images/gallery/g12.jpg"
                   alt="Foto galeri"
+                  draggable="false"
                 />
+                <button type="button" class="gallery-nav gallery-nav--prev" id="gallery-prev" aria-label="Foto sebelumnya">&#8249;</button>
+                <button type="button" class="gallery-nav gallery-nav--next" id="gallery-next" aria-label="Foto berikutnya">&#8250;</button>
               </div>
-              <p class="gallery-main-caption" id="gallery-main-caption"></p>
               <div class="gallery-marquee" id="gallery-marquee">
                 <div class="gallery-track" id="gallery-track">
                   <!-- diisi via JS dari config -->
@@ -825,6 +827,8 @@
           class="lightbox-image"
         />
         <p id="lightbox-caption" class="lightbox-caption"></p>
+        <button type="button" class="gallery-nav gallery-nav--prev" id="lightbox-prev" aria-label="Foto sebelumnya">&#8249;</button>
+        <button type="button" class="gallery-nav gallery-nav--next" id="lightbox-next" aria-label="Foto berikutnya">&#8250;</button>
       </div>
 
       <!-- ======================================================

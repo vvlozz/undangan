@@ -13,6 +13,7 @@ const Gift = {
     qr.addEventListener("click", () => {
       Utils.$("#lightbox-image").src = WEDDING_CONFIG.qrImage;
       Utils.$("#lightbox-caption").textContent = "QR Code Hadiah Digital";
+      Utils.$("#lightbox").classList.add("no-nav");
       Utils.$("#lightbox").classList.add("open");
       MusicPlayer.playClick();
     });
